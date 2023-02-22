@@ -10,6 +10,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RequiredArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -18,10 +19,15 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
+    @NonNull
     String name;
+    @NonNull
     String email;
-
+    @NonNull
     String password;
+
+    String guardianName;
+    String guardianEmail;
     @OneToMany(mappedBy = "student",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     List<Submission> submissionList;
     @JoinTable(name = "student_course",
