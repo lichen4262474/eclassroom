@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,7 +31,7 @@ public class Teacher {
     String password;
 
     @OneToMany(mappedBy = "teacher",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    List<Course> courseList;
+    List<Course> courseList = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -43,5 +44,9 @@ public class Teacher {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+   public void addCourse(Course course){
+        this.courseList.add(course);
     }
 }

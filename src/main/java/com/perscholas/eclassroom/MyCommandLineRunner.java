@@ -30,7 +30,6 @@ import org.springframework.stereotype.Component;
         public MyCommandLineRunner(StudentRepoI studentRepoI, TeacherRepoI teacherRepoI) {
             this.studentRepoI = studentRepoI;
             this.teacherRepoI = teacherRepoI;
-
         }
 
         @PostConstruct
@@ -41,9 +40,9 @@ import org.springframework.stereotype.Component;
         @Override
         public void run(String... args) throws Exception {
 
-            Student student1 = new Student("Jafer", "Jafer@gmail.com", "dsf");
-            Student student2 = new Student("Mohammed", "Mohammed@gmail.com", "sdfa");
-            Student student3 = new Student("Anjana", "Anjana@gmail.com", "563ghf");
+            Student student1 = new Student("Jafer", "Jafer@gmail.com", "dsf","asdf","ss");
+            Student student2 = new Student("Mohammed", "Mohammed@gmail.com", "sdfa","sadf","fasdf");
+            Student student3 = new Student("Anjana", "Anjana@gmail.com", "563ghf","asdf","asdfa");
 
             studentRepoI.save(student1);
             studentRepoI.save(student2);

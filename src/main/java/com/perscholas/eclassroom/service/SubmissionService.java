@@ -1,11 +1,16 @@
 package com.perscholas.eclassroom.service;
 
 import com.perscholas.eclassroom.dao.*;
+import com.perscholas.eclassroom.models.Assignment;
+import com.perscholas.eclassroom.models.Submission;
+import com.perscholas.eclassroom.models.Teacher;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.NoSuchElementException;
 
 @Service
 @Slf4j
@@ -16,7 +21,7 @@ public class SubmissionService {
     CourseRepoI courseRepoI;
     LessonRepoI lessonRepoI;
     StudentRepoI studentRepoI;
-    SubmissonRepoI submissonRepoI;
+    SubmissionRepoI submissionRepoI;
     TeacherRepoI teacherRepoI;
 
     @Autowired
@@ -25,7 +30,7 @@ public class SubmissionService {
                                 CourseRepoI courseRepoI,
                                 LessonRepoI lessonRepoI,
                                 StudentRepoI studentRepoI,
-                                SubmissonRepoI submissonRepoI,
+                                SubmissionRepoI submissionRepoI,
                                 TeacherRepoI teacherRepoI){
 
         this.announcementRepoI = announcementRepoI;
@@ -34,10 +39,29 @@ public class SubmissionService {
         this.lessonRepoI = lessonRepoI;
         this.studentRepoI = studentRepoI;
         this.teacherRepoI = teacherRepoI;
-        this.submissonRepoI = submissonRepoI;
+        this.submissionRepoI = submissionRepoI;
     }
 
 
+
+    public void saveSubmission(Submission submission) {
+        submissionRepoI.save(submission);
+    }
+
+    public void deleteSubmission(Integer id){
+        submissionRepoI.deleteById(id);
+    }
+
+    public void updateSubmission(String submissionLink,Integer id){
+        submissionRepoI.setSubmissionInfoById(submissionLink,id);
+    }
+    public Submission getSubmission(Integer id) throws NoSuchElementException {
+        return submissionRepoI.findById(id).orElseThrow();
+    }
+    public void updateGrade(Integer grade, Integer id){
+        submissionRepoI.setSubmissionGradeById(grade,id);
+
+    }
 
 
 }
