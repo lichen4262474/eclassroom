@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -57,7 +58,9 @@ public class AssignmentService {
     public Assignment getAssignment(Integer id) throws NoSuchElementException {
         return assignmentRepoI.findById(id).orElseThrow();
     }
-
+    public List<Assignment> getAllAssignmentForCourse(Integer id) throws NoSuchElementException{
+        return courseRepoI.findById(id).orElseThrow().getAssignmentList();
+    }
 
 
 }

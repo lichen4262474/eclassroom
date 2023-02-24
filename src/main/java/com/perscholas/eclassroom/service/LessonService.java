@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -56,5 +57,7 @@ public class LessonService {
         return lessonRepoI.findById(id).orElseThrow();
     }
 
-
+    public List<Lesson> getAllLessonForCourse(Integer id) throws NoSuchElementException{
+        return courseRepoI.findById(id).orElseThrow().getLessonList();
+    }
 }

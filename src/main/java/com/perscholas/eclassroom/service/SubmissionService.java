@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -58,10 +59,16 @@ public class SubmissionService {
     public Submission getSubmission(Integer id) throws NoSuchElementException {
         return submissionRepoI.findById(id).orElseThrow();
     }
+
     public void updateGrade(Integer grade, Integer id){
         submissionRepoI.setSubmissionGradeById(grade,id);
-
     }
+
+    public List<Submission> getAllSubmissionForAssignment(Integer id) throws NoSuchElementException{
+       return assignmentRepoI.findById(id).orElseThrow().getSubmissionList();
+    }
+
+
 
 
 }

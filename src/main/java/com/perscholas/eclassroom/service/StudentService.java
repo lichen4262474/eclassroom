@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -59,5 +60,8 @@ public class StudentService {
         return studentRepoI.findById(id).orElseThrow();
     }
 
+    public List<Student> getAllStudentForCourse(Integer id)throws NoSuchElementException{
+        return courseRepoI.findById(id).get().getStudentList();
+    }
 
 }

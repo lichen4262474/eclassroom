@@ -7,9 +7,11 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -49,15 +51,20 @@ public class CourseService {
         courseRepoI.deleteById(id);
     }
 
-    public void updateCourse(String name, String description, String zoom, String weekday, LocalTime classStartTime, LocalTime classEndTime, Integer id){
-        courseRepoI.setCourseInfoById(name,description,zoom,weekday,classStartTime,classEndTime,id);
+    public void updateCourse(String name, String description, String zoom, String schedule, Integer id){
+        courseRepoI.setCourseInfoById(name,description,zoom,schedule,id);
     }
     public Course getCourse(Integer id) throws NoSuchElementException {
         return courseRepoI.findById(id).orElseThrow();
     }
 
-    // public File getQrCode(Integer id){
-    // return courseRepo.findById(id).getQrCode();
+    public List<Course> getAllCourseForTeacher(Integer id)throws NoSuchElementException{
+        return teacherRepoI.findById(id).orElseThrow().getCourseList();
+    }
+    public List<Course> getAllCourseForStudent(Integer id)throws NoSuchElementException{
+        return studentRepoI.findById(id).orElseThrow().getCourseList();
+    }
+
 
 
 }

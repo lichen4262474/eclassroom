@@ -35,15 +35,9 @@ public class Course {
     @NonNull
     String zoom;
     @NonNull
-    String weekday;
-    @NonNull
-    LocalTime classStartTime;
-    @NonNull
-    LocalTime classEndTime;
+    String schedule;
 
     UUID code;
-
-    File qrCode;
 
     @ManyToMany(mappedBy = "courseList")
     List<Student> studentList = new ArrayList<>();
