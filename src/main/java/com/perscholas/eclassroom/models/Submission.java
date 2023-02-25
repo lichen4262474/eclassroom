@@ -29,7 +29,8 @@ public class Submission {
     Assignment assignment;
     @ManyToOne
     Student student;
-
+    @ManyToOne
+    Course course;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

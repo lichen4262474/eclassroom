@@ -1,14 +1,14 @@
 package com.perscholas.eclassroom.service;
 
-import com.perscholas.eclassroom.dao.*;
+import com.perscholas.eclassroom.repo.*;
 import com.perscholas.eclassroom.models.Announcement;
-import com.perscholas.eclassroom.models.Teacher;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -54,5 +54,9 @@ public class AnnouncementService {
     }
     public Announcement getAnnouncement(Integer id) throws NoSuchElementException {
         return announcementRepoI.findById(id).orElseThrow();
+    }
+
+    public List<Announcement> getAllAnnouncement() {
+        return announcementRepoI.findAll();
     }
 }

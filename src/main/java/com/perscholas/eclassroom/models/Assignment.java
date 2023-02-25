@@ -1,6 +1,7 @@
 package com.perscholas.eclassroom.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class Assignment {
     String resourceLink;
     LocalDateTime postDateTime = LocalDateTime.now();
     @NonNull
+    @Future
     LocalDateTime dueDateTime;
     @OneToMany(mappedBy = "assignment",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     List<Submission> submissionList;

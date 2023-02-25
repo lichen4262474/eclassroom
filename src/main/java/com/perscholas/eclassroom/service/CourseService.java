@@ -1,8 +1,8 @@
 package com.perscholas.eclassroom.service;
 
-import com.perscholas.eclassroom.dao.*;
+import com.perscholas.eclassroom.repo.*;
+import com.perscholas.eclassroom.dto.CourseDTO;
 import com.perscholas.eclassroom.models.Course;
-import com.perscholas.eclassroom.models.Teacher;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -55,9 +57,14 @@ public class CourseService {
     public Course getCourse(Integer id) throws NoSuchElementException {
         return courseRepoI.findById(id).orElseThrow();
     }
-
-    // public File getQrCode(Integer id){
-    // return courseRepo.findById(id).getQrCode();
-
+    public List<CourseDTO> getAllCourseEssInfo() {
+        return courseRepoI
+                .findAll()
+                .stream()
+                .map((course) -> {
+                    return new CourseDTO(course.getName(),course.getDescription(),course.getSchedule(),course.getZoom() );
+                })
+                .collect(Collectors.toList());
+    }
 
 }

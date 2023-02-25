@@ -1,9 +1,9 @@
 package com.perscholas.eclassroom.service;
 
-import com.perscholas.eclassroom.dao.*;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.perscholas.eclassroom.models.Announcement;
+import com.perscholas.eclassroom.repo.*;
 import com.perscholas.eclassroom.models.Assignment;
-import com.perscholas.eclassroom.models.Teacher;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -57,7 +58,9 @@ public class AssignmentService {
     public Assignment getAssignment(Integer id) throws NoSuchElementException {
         return assignmentRepoI.findById(id).orElseThrow();
     }
-
+    public List<Assignment> getAllAssignment() {
+        return assignmentRepoI.findAll();
+    }
 
 
 }

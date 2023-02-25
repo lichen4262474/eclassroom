@@ -2,6 +2,10 @@ package com.perscholas.eclassroom.models;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +30,10 @@ public class Teacher {
     @NonNull
     String name;
     @NonNull
+    @Email(message = "Please provide a valid email")
     String email;
     @NonNull
+    @Size(min = 6, max = 10)
     String password;
 
     @OneToMany(mappedBy = "teacher",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})

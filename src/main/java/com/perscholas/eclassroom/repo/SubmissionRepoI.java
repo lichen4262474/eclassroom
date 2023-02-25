@@ -1,11 +1,16 @@
-package com.perscholas.eclassroom.dao;
+package com.perscholas.eclassroom.repo;
 
+import com.perscholas.eclassroom.models.Assignment;
+import com.perscholas.eclassroom.models.Course;
+import com.perscholas.eclassroom.models.Student;
 import com.perscholas.eclassroom.models.Submission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 public interface SubmissionRepoI extends JpaRepository<Submission,Integer> {
@@ -18,4 +23,10 @@ public interface SubmissionRepoI extends JpaRepository<Submission,Integer> {
     @Modifying
     @Query(value="update Submission set submission.grade =?1 where submission.id =?2", nativeQuery = true)
     void setSubmissionGradeById(Integer grade, Integer id);
+
+    List<Submission> findByAssignment(Assignment asgmt);
+
+    List<Submission> findByStudent(Student student);
+
+    List<Submission> findByCourse(Course course);
 }

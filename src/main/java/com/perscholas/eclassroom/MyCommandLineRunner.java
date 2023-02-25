@@ -1,11 +1,8 @@
 package com.perscholas.eclassroom;
 
-import com.perscholas.eclassroom.dao.CourseRepoI;
-import com.perscholas.eclassroom.dao.StudentRepoI;
-import com.perscholas.eclassroom.dao.TeacherRepoI;
-import com.perscholas.eclassroom.models.Course;
+import com.perscholas.eclassroom.repo.StudentRepoI;
+import com.perscholas.eclassroom.repo.TeacherRepoI;
 import com.perscholas.eclassroom.models.Student;
-import com.perscholas.eclassroom.models.Teacher;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

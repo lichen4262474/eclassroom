@@ -1,4 +1,4 @@
-package com.perscholas.eclassroom.dao;
+package com.perscholas.eclassroom.repo;
 
 import com.perscholas.eclassroom.models.Assignment;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface AssignmentRepoI extends JpaRepository<Assignment,Integer> {
@@ -15,4 +16,5 @@ public interface AssignmentRepoI extends JpaRepository<Assignment,Integer> {
     @Modifying
     @Query(value="update Assignment set assignment.title = ?1, assignment.content = ?2, assignment.resourceLink =?3, assignment.dueDateTime =?4 where announcement.id = ?5",nativeQuery = true)
     void setAssignmentInfoById(String title, String content, String resourceLink, LocalDateTime dueDateTime, Integer id);
+
 }

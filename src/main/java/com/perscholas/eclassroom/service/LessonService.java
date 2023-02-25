@@ -1,14 +1,14 @@
 package com.perscholas.eclassroom.service;
 
-import com.perscholas.eclassroom.dao.*;
+import com.perscholas.eclassroom.repo.*;
 import com.perscholas.eclassroom.models.Lesson;
-import com.perscholas.eclassroom.models.Teacher;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -54,6 +54,9 @@ public class LessonService {
     }
     public Lesson getLesson(Integer id) throws NoSuchElementException {
         return lessonRepoI.findById(id).orElseThrow();
+    }
+    public List<Lesson> getAllLesson() {
+        return lessonRepoI.findAll();
     }
 
 

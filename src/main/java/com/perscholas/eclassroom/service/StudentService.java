@@ -1,17 +1,17 @@
 package com.perscholas.eclassroom.service;
 
-import com.perscholas.eclassroom.dao.*;
-import com.perscholas.eclassroom.models.Assignment;
+import com.perscholas.eclassroom.repo.*;
+import com.perscholas.eclassroom.dto.StudentDTO;
 import com.perscholas.eclassroom.models.Student;
-import com.perscholas.eclassroom.models.Teacher;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -58,6 +58,15 @@ public class StudentService {
     public Student getStudent(Integer id) throws NoSuchElementException {
         return studentRepoI.findById(id).orElseThrow();
     }
+    public List<StudentDTO> getAllStudentsEssInfo() {
 
+        return studentRepoI
+                .findAll()
+                .stream()
+                .map((oneStudent) -> {
+                    return new StudentDTO(oneStudent.getId(), oneStudent.getName(), oneStudent.getEmail(), oneStudent.getGuardianName(), oneStudent.getGuardianName());
+                })
+                .collect(Collectors.toList());
+    }
 
 }

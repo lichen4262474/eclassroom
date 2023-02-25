@@ -35,17 +35,13 @@ public class Course {
     @NonNull
     String zoom;
     @NonNull
-    String weekday;
-    @NonNull
-    LocalTime classStartTime;
-    @NonNull
-    LocalTime classEndTime;
+    String schedule;
 
     UUID code;
 
-    File qrCode;
 
     @ManyToMany(mappedBy = "courseList")
+    @ToString.Exclude
     List<Student> studentList = new ArrayList<>();
     @OneToMany(mappedBy = "course",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     List<Announcement> anouncementList = new ArrayList<>();
@@ -53,7 +49,8 @@ public class Course {
     List<Lesson> lessonList;
     @OneToMany(mappedBy = "course",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     List<Assignment> assignmentList = new ArrayList<>();
-
+    @OneToMany(mappedBy = "course",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    List<Submission> submissionList =new ArrayList<>();
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

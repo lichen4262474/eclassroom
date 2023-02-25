@@ -1,4 +1,4 @@
-package com.perscholas.eclassroom.dao;
+package com.perscholas.eclassroom.repo;
 
 import com.perscholas.eclassroom.models.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
