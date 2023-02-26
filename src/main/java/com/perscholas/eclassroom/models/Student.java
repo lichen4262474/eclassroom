@@ -67,7 +67,14 @@ public class Student {
         this.courseList.add(course);
         course.addStudent(this);
     }
+
+    public void dropCourse(Course course) {
+    this.courseList.remove(course);
+    course.deleteStudent(this);
+    }
     public void addSubmission(Submission submission){
         this.submissionList.add(submission);
     }
+
+
 }

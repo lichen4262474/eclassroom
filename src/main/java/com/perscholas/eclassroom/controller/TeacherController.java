@@ -1,7 +1,9 @@
 package com.perscholas.eclassroom.controller;
 
+import com.perscholas.eclassroom.models.Course;
 import com.perscholas.eclassroom.models.Teacher;
 import com.perscholas.eclassroom.service.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -42,13 +44,19 @@ public class TeacherController {
         this.teacherService = teacherService;
     }
 
+    @GetMapping("")
+    public String show(Teacher teacher)
+    {
+        return "teacherregister";
+    }
 
     @PostMapping("/addTeacher")
-    public String saveTeacher(@ModelAttribute("teacher") Teacher teacher){
+    public String saveTeacher(@ModelAttribute("teacher") Teacher teacher, Course course){
         log.warn("add teacher: "+ teacher);
-    teacherService.saveTeacher(teacher);
-    return "index";
+        teacherService.saveTeacher(teacher);
+        return "teacherhome";
     }
+
     @GetMapping("/getTeacher")
     public String getTeacher(@RequestParam Integer id, Model model){
         log.warn("get teacher: "+ teacherService.getTeacher(id));

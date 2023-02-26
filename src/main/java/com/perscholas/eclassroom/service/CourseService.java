@@ -1,5 +1,6 @@
 package com.perscholas.eclassroom.service;
 
+import com.perscholas.eclassroom.models.Student;
 import com.perscholas.eclassroom.repo.*;
 import com.perscholas.eclassroom.dto.CourseDTO;
 import com.perscholas.eclassroom.models.Course;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,11 +53,20 @@ public class CourseService {
         courseRepoI.deleteById(id);
     }
 
-    public void updateCourse(String name, String description, String zoom, String weekday, LocalTime classStartTime, LocalTime classEndTime, Integer id){
+    public void updateCourseInfo(String name, String description, String zoom, String weekday, LocalTime classStartTime, LocalTime classEndTime, Integer id){
         courseRepoI.setCourseInfoById(name,description,zoom,weekday,classStartTime,classEndTime,id);
     }
-    public Course getCourse(Integer id) throws NoSuchElementException {
+    public Course getCourseByID(Integer id) throws NoSuchElementException {
         return courseRepoI.findById(id).orElseThrow();
+    }
+
+    public Course getCourseByCode(UUID code) throws  NoSuchElementException{
+        return courseRepoI.findByCode(code).orElseThrow();
+    }
+
+    public void addCourseForStudent(UUID code, Student student) throws NoSuchElementException{
+        Course course = this.getCourseByCode(code);
+        course.addStudent(student);
     }
     public List<CourseDTO> getAllCourseEssInfo() {
         return courseRepoI

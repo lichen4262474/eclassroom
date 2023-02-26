@@ -27,8 +27,16 @@ public class Lesson {
     String content;
     LocalDateTime postDateTime = LocalDateTime.now();
     @ManyToOne
+    @NonNull
     Course course;
     String resourceLink;
+
+    public Lesson(@NonNull String title, @NonNull String content, Course course, String resourceLink) {
+        this.title = title;
+        this.content = content;
+        this.course = course;
+        this.resourceLink = resourceLink;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,8 +1,9 @@
 package com.perscholas.eclassroom;
 
+import com.perscholas.eclassroom.models.*;
 import com.perscholas.eclassroom.repo.StudentRepoI;
 import com.perscholas.eclassroom.repo.TeacherRepoI;
-import com.perscholas.eclassroom.models.Student;
+import com.perscholas.eclassroom.service.*;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -11,22 +12,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 
-    @Component
+
+@Component
     @Slf4j
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public class MyCommandLineRunner implements CommandLineRunner {
 
 
-        StudentRepoI studentRepoI;
+       StudentService studentService;
+       TeacherService teacherService;
+       CourseService courseService;
+       AnnouncementService announcementService;
+       LessonService lessonService;
+       AssignmentService assignmentService;
+       SubmissionService submissionService;
 
-        TeacherRepoI teacherRepoI;
 
 
         @Autowired
-        public MyCommandLineRunner(StudentRepoI studentRepoI, TeacherRepoI teacherRepoI) {
-            this.studentRepoI = studentRepoI;
-            this.teacherRepoI = teacherRepoI;
+        public MyCommandLineRunner(  StudentService studentService,
+        TeacherService teacherService,
+        CourseService courseService,
+        AnnouncementService announcementService,
+        LessonService lessonService,
+        AssignmentService assignmentService,
+        SubmissionService submissionService) {
+            this.studentService = studentService;
+            this.teacherService = teacherService;
+            this.courseService = courseService;
+            this.announcementService = announcementService;
+            this.lessonService = lessonService;
+            this.submissionService = submissionService;
+            this.assignmentService =assignmentService;
         }
 
         @PostConstruct
@@ -37,13 +57,60 @@ import org.springframework.stereotype.Component;
         @Override
         public void run(String... args) throws Exception {
 
-            Student student1 = new Student("Jafer", "Jafer@gmail.com", "dsf","asdf","ss");
-            Student student2 = new Student("Mohammed", "Mohammed@gmail.com", "sdfa","sadf","fasdf");
-            Student student3 = new Student("Anjana", "Anjana@gmail.com", "563ghf","asdf","asdfa");
+            Student student1 = new Student("Jafer", "Jafer@gmail.com", "111111","Jafer Guardian","JG@gmail.com");
+            Student student2 = new Student("Mohammed", "Mohammed@gmail.com", "222222","Mohammed Guardian","MG@gmail.com");
+            Student student3 = new Student("Anjana", "Anjana@gmail.com", "333333","Anjana Guardian","AG@gmail.com");
 
-            studentRepoI.save(student1);
-            studentRepoI.save(student2);
-            studentRepoI.save(student3);
+            studentService.saveStudent(student1);
+            studentService.saveStudent(student2);
+            studentService.saveStudent(student3);
+
+            Teacher teacher1 = new Teacher("Zach", "Zach@gmail.com","111111");
+            Teacher teacher2 = new Teacher("Tyron","Tyron@gmail.com","222222");
+            Teacher teacher3 = new Teacher("Kevin","Kevin@gmail.com","333333");
+
+            teacherService.saveTeacher(teacher1);
+            teacherService.saveTeacher(teacher2);
+            teacherService.saveTeacher(teacher3);
+
+            Course course1 = new Course("English1","Freshman Course","www.zoom1.com","9:00-10:00AM", teacher1);
+            Course course2 = new Course("English2","Sophomore Course","www.zoom2.com","10:00-11:00AM", teacher2);
+            Course course3 = new Course("English3","Junior Course","www.zoom3.com","11:00-12:00AM", teacher3);
+
+            courseService.saveCourse(course1);
+            courseService.saveCourse(course2);
+            courseService.saveCourse(course3);
+
+            Announcement announcement1 = new Announcement("Welcome","Welcome to my class",course1);
+            Announcement announcement2 = new Announcement("Hello","Welcome to my class",course2);
+            Announcement announcement3 = new Announcement("Hi","Welcome to my class",course3);
+
+            announcementService.saveAnnouncement(announcement1);
+            announcementService.saveAnnouncement(announcement2);
+            announcementService.saveAnnouncement(announcement3);
+
+            Lesson lesson1 = new Lesson("Lesson1","Content of Lesson1",course1,"www.resource.com");
+            Lesson lesson2 = new Lesson("Lesson2","Content of Lesson2",course1,"www.resource.com");
+            Lesson lesson3 = new Lesson("Lesson3","Content of Lesson3",course1,"www.resource.com");
+
+            lessonService.saveLesson(lesson1);
+            lessonService.saveLesson(lesson2);
+            lessonService.saveLesson(lesson3);
+
+            Assignment assignment1 = new Assignment("Assignment1","Content of Assignment1","www.resourse.com", LocalDateTime.of(2023,
+                    Month.JULY, 29, 19, 30, 40),course1);
+            Assignment assignment2 = new Assignment("Assignment2","Content of Assignment2","www.resourse.com", LocalDateTime.of(2023,
+                    Month.JULY, 30, 19, 30, 40),course2);
+            Assignment assignment3 = new Assignment("Assignment3","Content of Assignment3","www.resourse.com", LocalDateTime.of(2023,
+                    Month.JULY, 31, 19, 30, 40),course2);
+
+            assignmentService.saveAssignment(assignment1);
+            assignmentService.saveAssignment(assignment2);
+            assignmentService.saveAssignment(assignment3);
+
+            Submission submission1 = new Submission("www.submissionlink",assignment1,student1,course1);
+            Submission submission2 = new Submission("www.submissionlink",assignment2,student2,course2);
+            Submission submission3 = new Submission("www.submissionlink",assignment3,student3,course3);
 
 
         }

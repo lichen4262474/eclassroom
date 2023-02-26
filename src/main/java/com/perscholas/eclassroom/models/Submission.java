@@ -26,11 +26,16 @@ public class Submission {
     String submissionLink;
     Integer grade;
     @ManyToOne
+    @NonNull
     Assignment assignment;
     @ManyToOne
+    @NonNull
     Student student;
     @ManyToOne
+    @NonNull
     Course course;
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -46,7 +46,8 @@
                       class="mx-1 mx-md-2 needs-validation"
                       name="register-form"
                       id="register-form"
-                      action="/register.html"
+                      th:action="@{/student/addStudent}"
+                      th:object="${student}"
                       method="post"
                     >
                       <div class="d-flex flex-row align-items-center mb-1">
@@ -60,6 +61,7 @@
                             placeholder="John Doe"
                             required
                             pattern="^([A-Z][a-z]*)(\s[A-Z][a-z]*){1,}$"
+                            th:field="*{name}"
                           />
                           <label class="form-label" for="your-name">Name</label>
                         </div>
@@ -74,6 +76,7 @@
                             class="form-control"
                             placeholder="johndoe@gmail.com"
                             required
+                            th:field="*{email}"
                           />
                           <label class="form-label" for="your-email"
                             >Email</label
@@ -91,6 +94,7 @@
                             placeholder="John Doe"
                             required
                             pattern="^([A-Z][a-z]*)(\s[A-Z][a-z]*){1,}$"
+                            th:field="*{guardianName}"
                           />
                           <label class="form-label" for="guardian-name"
                             >Guardian Name</label
@@ -107,6 +111,7 @@
                             class="form-control"
                             placeholder="johndoe@gmail.com"
                             required
+                            th:field="*{guardianEmail}"
                           />
                           <label class="form-label" for="guardian-email"
                             >Guardian Email</label
@@ -122,9 +127,10 @@
                             id="your-password"
                             name="your-password"
                             class="form-control"
-                            placeholder="6 digits and up"
+                            placeholder="Minimum 6 digits"
                             required
                             minlength="6"
+                            th:field="*{password}"
                           />
                           <label class="form-label" for="your-password"
                             >Password</label
@@ -183,7 +189,7 @@
                     class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2"
                   >
                     <img
-                      src="https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/JXOAWXWGGMI6JKQ2QYJVLGP3B4.jpg&w=1200"
+                      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
                       class="img-fluid"
                       id="login-image"
                       alt="login-image"

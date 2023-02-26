@@ -103,14 +103,16 @@
             ></button>
           </div>
           <div class="modal-body">
-
-            <label for="UUID" class="form-label">Enter Class Code</label>
-            <input
-              type="text"
-              id="UUID"
-              class="form-control"
-              aria-describedby="courseNameHelpBlock"
-            />
+            <form method="post" th:action="@{student/addCourse}">
+              <label for="code" class="form-label">Enter Class Code</label>
+              <input
+                type="text"
+                id="UUID"
+                class="form-control"
+                aria-describedby="courseNameHelpBlock"
+                name="code"
+                th:value="*{code}"
+              />
             </form>
           </div>
           <div class="modal-footer">

@@ -29,6 +29,12 @@ public class Announcement {
     @ManyToOne
     Course course;
 
+    public Announcement(@NonNull String title, @NonNull String content, Course course) {
+        this.title = title;
+        this.content = content;
+        this.course = course;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

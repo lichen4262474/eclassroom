@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,9 +34,18 @@ public class Assignment {
     @Future
     LocalDateTime dueDateTime;
     @OneToMany(mappedBy = "assignment",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    List<Submission> submissionList;
+    List<Submission> submissionList = new ArrayList<>();
     @ManyToOne
+    @NonNull
     Course course;
+
+    public Assignment(@NonNull String title, @NonNull String content, String resourceLink, @NonNull LocalDateTime dueDateTime, @NonNull Course course) {
+        this.title = title;
+        this.content = content;
+        this.resourceLink = resourceLink;
+        this.dueDateTime = dueDateTime;
+        this.course = course;
+    }
 
     public Assignment(@NonNull String title, @NonNull String content, String resourceLink, @NonNull LocalDateTime dueDateTime) {
         this.title = title;

@@ -17,6 +17,7 @@ import java.util.UUID;
 @Slf4j
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -28,14 +29,15 @@ public class Course {
     @NonNull
     String name;
     @NonNull
-    @ManyToOne
-    Teacher teacher;
-    @NonNull
     String description;
     @NonNull
     String zoom;
     @NonNull
     String schedule;
+
+    @NonNull
+    @ManyToOne
+    Teacher teacher;
 
     UUID code;
 
@@ -67,6 +69,11 @@ public class Course {
     public void addStudent(Student student) {
         this.studentList.add(student);
         student.addCourse(this);
+    }
+
+    public void deleteStudent(Student student){
+        this.studentList.remove(student);
+        student.dropCourse(this);
     }
     public void addAnnouncement(Announcement announcement) {
         this.anouncementList.add(announcement);
