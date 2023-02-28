@@ -51,6 +51,14 @@ public class StudentService {
         studentRepoI.deleteById(id);
     }
 
+    public void findStudentByEmail(String email){
+        studentRepoI.findByEmail(email);
+    }
+
+    public Integer studentExistByEmail(String email){
+        return studentRepoI.existByEmail(email);
+    }
+
     public void updateStudent(String name, String email, String password,String guardianName, String guardianEmail,Integer id){
         studentRepoI.setStudentInfoById(name, email,password,guardianName,guardianEmail,id);
     }

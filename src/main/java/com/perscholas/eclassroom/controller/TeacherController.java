@@ -44,11 +44,7 @@ public class TeacherController {
         this.teacherService = teacherService;
     }
 
-    @GetMapping("")
-    public String show(Teacher teacher)
-    {
-        return "teacherregister";
-    }
+
 
     @PostMapping("/addTeacher")
     public String saveTeacher(@ModelAttribute("teacher") Teacher teacher, Course course){

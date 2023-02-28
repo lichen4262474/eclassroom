@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -43,11 +44,11 @@ public class StudentController {
         this.teacherService = teacherService;
     }
 
-    @GetMapping("")
-    public String show(Student student)
-    {
-        return "studentregister";
+    @ModelAttribute
+    public void theStudent( Model model){
+        model.addAttribute("theStudent", new Student());
     }
+
     @PostMapping("/addStudent")
     public String saveStudent(@ModelAttribute("student") Student student, @RequestParam UUID code){
         log.warn("add student: "+ student);

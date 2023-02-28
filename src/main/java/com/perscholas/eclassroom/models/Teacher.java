@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +17,9 @@ import java.util.Objects;
 
 @Entity
 @Slf4j
-@AllArgsConstructor
-@RequiredArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Teacher {
@@ -30,14 +29,22 @@ public class Teacher {
     @NonNull
     String name;
     @NonNull
-    @Email(message = "Please provide a valid email")
+    @Email
     String email;
     @NonNull
-    @Size(min = 6, max = 10)
+//    @Size(min = 6, max = 10)
     String password;
 
     @OneToMany(mappedBy = "teacher",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     List<Course> courseList = new ArrayList<>();
+
+    public Teacher(@NonNull String name, @NonNull String email, @NonNull String password) {
+        this.name = name;
+        this.email = email;
+        this.password = new BCryptPasswordEncoder(4).encode(password);
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

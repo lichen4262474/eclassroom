@@ -54,6 +54,12 @@ public class TeacherService {
     public Teacher getTeacher(Integer id) throws NoSuchElementException{
         return teacherRepoI.findById(id).orElseThrow();
     }
+    public Teacher findTeacherByEmail(String email){
+        return teacherRepoI.findByEmail(email);
+    }
 
+    public Integer teacherExistByEmail(String email){
+        return  teacherRepoI.existByEmail(email);
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.perscholas.eclassroom;
 
 import com.perscholas.eclassroom.models.*;
+import com.perscholas.eclassroom.repo.AuthGroupRepoI;
 import com.perscholas.eclassroom.repo.StudentRepoI;
 import com.perscholas.eclassroom.repo.TeacherRepoI;
 import com.perscholas.eclassroom.service.*;
@@ -30,26 +31,21 @@ import java.time.Month;
        AssignmentService assignmentService;
        SubmissionService submissionService;
 
+        AuthGroupRepoI authGroupRepoI;
 
+@Autowired
+    public MyCommandLineRunner(StudentService studentService, TeacherService teacherService, CourseService courseService, AnnouncementService announcementService, LessonService lessonService, AssignmentService assignmentService, SubmissionService submissionService, AuthGroupRepoI authGroupRepoI) {
+        this.studentService = studentService;
+        this.teacherService = teacherService;
+        this.courseService = courseService;
+        this.announcementService = announcementService;
+        this.lessonService = lessonService;
+        this.assignmentService = assignmentService;
+        this.submissionService = submissionService;
+        this.authGroupRepoI = authGroupRepoI;
+    }
 
-        @Autowired
-        public MyCommandLineRunner(  StudentService studentService,
-        TeacherService teacherService,
-        CourseService courseService,
-        AnnouncementService announcementService,
-        LessonService lessonService,
-        AssignmentService assignmentService,
-        SubmissionService submissionService) {
-            this.studentService = studentService;
-            this.teacherService = teacherService;
-            this.courseService = courseService;
-            this.announcementService = announcementService;
-            this.lessonService = lessonService;
-            this.submissionService = submissionService;
-            this.assignmentService =assignmentService;
-        }
-
-        @PostConstruct
+    @PostConstruct
         void created() {
             log.warn("=============== My CommandLineRunner Got Created ===============");
         }
@@ -57,13 +53,22 @@ import java.time.Month;
         @Override
         public void run(String... args) throws Exception {
 
-            Student student1 = new Student("Jafer", "Jafer@gmail.com", "111111","Jafer Guardian","JG@gmail.com");
-            Student student2 = new Student("Mohammed", "Mohammed@gmail.com", "222222","Mohammed Guardian","MG@gmail.com");
-            Student student3 = new Student("Anjana", "Anjana@gmail.com", "333333","Anjana Guardian","AG@gmail.com");
+            Student student1 = new Student("Jafer", "Jafer@gmail.com", "Jafer Guardian","JaferGuardian@gmail.com","111111");
+            Student student2 = new Student("Mohammed", "Mohammed@gmail.com", "Mohammed Guardian","MohammedGuardian@gmail.com","222222");
+            Student student3 = new Student("Anjana", "Anjana@gmail.com", "Anjana Guardian","AnjanaGuardian@gmail.com","333333");
 
             studentService.saveStudent(student1);
             studentService.saveStudent(student2);
             studentService.saveStudent(student3);
+
+            AuthGroup authGroup1 = new AuthGroup("Jafer@gmail.com","student");
+            AuthGroup authGroup2 = new AuthGroup("Mohammed@gmail.com","student");
+            AuthGroup authGroup3 = new AuthGroup("Anjana@gmail.com","student");
+
+            authGroupRepoI.save(authGroup1);
+            authGroupRepoI.save(authGroup2);
+            authGroupRepoI.save(authGroup3);
+
 
             Teacher teacher1 = new Teacher("Zach", "Zach@gmail.com","111111");
             Teacher teacher2 = new Teacher("Tyron","Tyron@gmail.com","222222");
@@ -72,6 +77,17 @@ import java.time.Month;
             teacherService.saveTeacher(teacher1);
             teacherService.saveTeacher(teacher2);
             teacherService.saveTeacher(teacher3);
+
+
+            AuthGroup authGroup4 = new AuthGroup("Zach@gmail.com","teacher");
+            AuthGroup authGroup5 = new AuthGroup("Tyron@gmail.com","teacher");
+            AuthGroup authGroup6 = new AuthGroup("Kevin@gmail.com","teacher");
+
+            authGroupRepoI.save(authGroup4);
+            authGroupRepoI.save(authGroup5);
+            authGroupRepoI.save(authGroup6);
+
+
 
             Course course1 = new Course("English1","Freshman Course","www.zoom1.com","9:00-10:00AM", teacher1);
             Course course2 = new Course("English2","Sophomore Course","www.zoom2.com","10:00-11:00AM", teacher2);

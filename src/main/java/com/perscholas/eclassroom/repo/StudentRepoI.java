@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface StudentRepoI extends JpaRepository<Student,Integer> {
     @Transactional
@@ -14,4 +17,7 @@ public interface StudentRepoI extends JpaRepository<Student,Integer> {
     @Query(value="update Student student set student.name = ?1, student.email = ?2, student.password = ?3, student.guardianName = ?4, student.guardianEmail = ?5 where student.id = ?6",nativeQuery = true)
     void setStudentInfoById(String name, String email, String password, String guardianName, String guardianEmail, Integer id);
 
+    Student findByEmail(String email);
+    @Query(value="select count(*) from Student student where student.email = ?1",nativeQuery = true)
+    Integer existByEmail(String email);
 }
