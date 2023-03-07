@@ -1,5 +1,6 @@
 package com.perscholas.eclassroom.service;
 
+import com.perscholas.eclassroom.models.Course;
 import com.perscholas.eclassroom.repo.*;
 import com.perscholas.eclassroom.models.Lesson;
 import lombok.AccessLevel;
@@ -57,6 +58,11 @@ public class LessonService {
     }
     public List<Lesson> getAllLesson() {
         return lessonRepoI.findAll();
+    }
+
+    public List<Lesson> getAllLessonByCourse(Integer id){
+        return lessonRepoI.getAllLessonByCourse(id);
+
     }
 
 

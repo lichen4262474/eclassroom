@@ -1,11 +1,13 @@
 package com.perscholas.eclassroom.service;
 
+import com.perscholas.eclassroom.models.Course;
 import com.perscholas.eclassroom.repo.*;
 import com.perscholas.eclassroom.models.Announcement;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,11 +54,12 @@ public class AnnouncementService {
     public void updateAnnouncement(String title, String content,Integer id){
         announcementRepoI.setAnnouncementInfoById(title,content,id);
     }
+
     public Announcement getAnnouncement(Integer id) throws NoSuchElementException {
         return announcementRepoI.findById(id).orElseThrow();
     }
 
     public List<Announcement> getAllAnnouncement() {
-        return announcementRepoI.findAll();
+        return announcementRepoI.findAll(Sort.by("postDateTime").descending());
     }
 }

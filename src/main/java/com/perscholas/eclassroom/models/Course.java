@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.io.File;
 import java.sql.Time;
@@ -20,7 +21,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Getter
 @Setter
-@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Course {
     @Id
@@ -35,24 +35,51 @@ public class Course {
     @NonNull
     String schedule;
 
-    @NonNull
     @ManyToOne
     Teacher teacher;
 
-    UUID code;
-
-
-    @ManyToMany(mappedBy = "courseList")
     @ToString.Exclude
+    @JoinTable(name = "student_course",
+            inverseJoinColumns  = @JoinColumn(name = "student_id", referencedColumnName = "id"),
+            joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
+    @ManyToMany (fetch = FetchType.LAZY, cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     List<Student> studentList = new ArrayList<>();
-    @OneToMany(mappedBy = "course",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @OneToMany(mappedBy = "course",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
     List<Announcement> anouncementList = new ArrayList<>();
-    @OneToMany (mappedBy = "course",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @OneToMany (mappedBy = "course",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
     List<Lesson> lessonList;
-    @OneToMany(mappedBy = "course",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @OneToMany(mappedBy = "course",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
     List<Assignment> assignmentList = new ArrayList<>();
-    @OneToMany(mappedBy = "course",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @OneToMany(mappedBy = "course",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
     List<Submission> submissionList =new ArrayList<>();
+
+
+    public Course(@NonNull String name, @NonNull String description, @NonNull String zoom, @NonNull String schedule, Teacher teacher) {
+        this.name = name;
+        this.description = description;
+        this.zoom = zoom;
+        this.schedule = schedule;
+        this.teacher = teacher;
+    }
+
+    public Course(Integer id, @NonNull String name, @NonNull String description, @NonNull String zoom, @NonNull String schedule, Teacher teacher) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.zoom = zoom;
+        this.schedule = schedule;
+        this.teacher = teacher;
+    }
+
+    @Override
+    public String toString() {
+        return name + " ";
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,12 +95,15 @@ public class Course {
 
     public void addStudent(Student student) {
         this.studentList.add(student);
-        student.addCourse(this);
     }
 
     public void deleteStudent(Student student){
         this.studentList.remove(student);
-        student.dropCourse(this);
+    }
+    public void deleteAllStudent(){
+        for(Student student:studentList){
+            student.deleteCourse(this);
+        }
     }
     public void addAnnouncement(Announcement announcement) {
         this.anouncementList.add(announcement);

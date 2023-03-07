@@ -1,35 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-  <!-- <head th:insert="~{fragments/header.html}"> </head> -->
-  <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, shrink-to-fit=no"
-  />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-  <!-- Favicon-->
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-  <!-- Core theme CSS (includes Bootstrap)-->
-  <link href="../static/css/styles.css" rel="stylesheet" />
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-  <!-- Bootstrap core JS-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Font Awesome JS-->
-  <script
-    src="https://kit.fontawesome.com/345ebf7689.js"
-    crossorigin="anonymous"
-  ></script>
+  <head>
+    <!-- <head th:insert="~{fragments/header.html}"> </head> -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <!-- <link href="../static/css/styles.css" rel="stylesheet" /> -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome JS-->
+    <script
+      src="https://kit.fontawesome.com/345ebf7689.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
   <body style="background-color: #eee">
     <!-- Responsive navbar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
         <!-- setting  trigger modal -->
-
-        <a class="navbar-brand" href="#">Teacher Home</a>
+        <i
+          class="fa-regular fa-user"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal3"
+          >&nbsp &nbsp</i
+        >
+        <a class="navbar-brand" href="/teacherhome">Teacher Home</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -113,7 +120,7 @@
               <label for="courseName" class="form-label">Course Name</label>
               <input
                 type="text"
-                id="courseDescription"
+                id="courseName"
                 class="form-control"
                 aria-describedby="courseNameHelpBlock"
                 th:field="*{name}"
@@ -136,6 +143,7 @@
                 id="zoom"
                 class="form-control"
                 aria-describedby="courseNameHelpBlock"
+                th:field="*{zoom}"
               />
 
               <label for="schedule" class="form-label">Schedule</label>
@@ -176,7 +184,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Delete a class</h5>
+            <h5 class="modal-title" id="exampleModalLabel3">Delete a class</h5>
             <button
               type="button"
               class="btn-close"
@@ -185,14 +193,25 @@
             ></button>
           </div>
           <div class="modal-body">
-            <select
-              class="form-select"
-              aria-label="Default select example"
-              th:each="course:${courseList}"
+            <form
+              method="post"
+              th:action="@{/teacher/deleteCourse}"
+              id="deleteCourse"
             >
-              <option selected>Select a course you want to delete</option>
-              <option th:value="${course.id}" th:text="${course.name}"></option>
-            </select>
+              <select
+                class="form-select"
+                aria-label="Default select example"
+                th:name="deleteCourseId"
+              >
+                <option selected>Select a course you want to drop</option>
+                <div th:each="course:${courseList}">
+                  <option
+                    th:value="${course.id}"
+                    th:text="${course.name}"
+                  ></option>
+                </div>
+              </select>
+            </form>
           </div>
           <div class="modal-footer">
             <button
@@ -202,13 +221,143 @@
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="submit" class="btn btn-primary" form="deleteCourse">
+              Save changes
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Core theme JS-->
-    <script src="../static/js/teacherHomeScript.js"></script>
+    <!-- user setting modal -->
+    <div
+      class="modal fade"
+      id="exampleModal3"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Change User Info</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form
+              class="needs-validation"
+              method="post"
+              th:action="@{/teacher/updateTeacher}"
+              id="changeTeacherInfo"
+            >
+              <div class="mb-3">
+                <label for="rename" class="form-label">Your Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="rename"
+                  th:placeholder="${teacher.name}"
+                  th:value="${teacher.name}"
+                  th:name="newName"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="reemail" class="form-label">Email address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="reemail"
+                  th:placeholder="${teacher.email}"
+                  disabled
+                />
+              </div>
+              <div class="mb-3">
+                <label for="repassword" class="form-label">password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="repassword"
+                  minlength="6"
+                  maxlength="10"
+                  required
+                  th:name="newPassword"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="repeatpassword" class="form-label"
+                  >repeat password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="repeatpassword"
+                  minlength="6"
+                  maxlength="10"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              form="changeTeacherInfo"
+            >
+              Save changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- class card -->
+    <div class="container">
+      <div class="row">
+        <div class="col-4 mt-3" th:each="course:${courseList}">
+          <div class="card shadow" style="width: 18rem">
+            <div class="card-body">
+              <h5 class="card-title" th:text="${course.name}"></h5>
+              <p></p>
+              <p class="card-text" th:text="${course.description}"></p>
+              <p class="card-text" th:text="${course.schedule}"></p>
+              <a class="card-text" th:href="${course.zoom}"> course zoom </a>
+              <p></p>
+              <a class="btn btn-primary"  th:href="@{/teacher/course/{id}(id = ${course.id})}">
+                  Go to class
+                </a>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- script to validate password -->
+    <script>
+      var repeatPasswordCheck = function () {
+        var password = document.getElementById("repassword");
+        var repeatPassword = document.getElementById("repeatpassword");
+        if (password.value != repeatPassword.value) {
+          repeatPassword.setCustomValidity("different password");
+        } else {
+          repeatPassword.setCustomValidity("");
+        }
+      };
+      var form = document.getElementById("changeTeacherInfo");
+      form.addEventListener("change", repeatPasswordCheck);
+    </script>
   </body>
 </html>

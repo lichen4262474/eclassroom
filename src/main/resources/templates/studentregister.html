@@ -129,9 +129,10 @@
                         id="your-password"
                         name="your-password"
                         class="form-control"
-                        placeholder="Minimum 6 digits"
+                        placeholder="6-10 digits"
                         required
                         minlength="6"
+                        maxlength="10"
                         th:field="*{password}"
                       />
                     </div>
@@ -152,6 +153,7 @@
                         class="form-control"
                         placeholder="repeat password"
                         minlength="6"
+                        maxlength="10"
                         required
                       />
                     </div>

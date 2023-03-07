@@ -1,5 +1,6 @@
 package com.perscholas.eclassroom.repo;
 
+import com.perscholas.eclassroom.models.Course;
 import com.perscholas.eclassroom.models.Student;
 import com.perscholas.eclassroom.models.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,10 +17,13 @@ import java.util.Optional;
 public interface TeacherRepoI  extends JpaRepository<Teacher,Integer> {
     @Transactional
     @Modifying
-    @Query(value="update teacher set teacher.name = ?1, teacher.email = ?2, teacher.password =?3 where teacher.id = ?4",nativeQuery = true)
-    void setTeacherInfoById(String name, String email, String password, Integer userId);
+    @Query(value="update teacher set teacher.name = ?1, teacher.password =?2 where teacher.id = ?3",nativeQuery = true)
+    void setTeacherInfoById(String name, String password, Integer userId);
+
 
     Teacher findByEmail(String email);
     @Query(value="select count(*) from Teacher teacher where teacher.email = ?1",nativeQuery = true)
     Integer existByEmail(String email);
+
+
 }

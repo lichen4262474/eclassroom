@@ -1,5 +1,6 @@
 package com.perscholas.eclassroom.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -27,6 +28,7 @@ public class Student {
     @NonNull
     String name;
     @NonNull
+    @Column(unique=true)
     @Email
     String email;
     @NonNull
@@ -35,18 +37,15 @@ public class Student {
     @NonNull
     String guardianName;
     @NonNull
-//    @Email
+    @Email
     String guardianEmail;
 
-    @OneToMany(mappedBy = "student",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @OneToMany(mappedBy = "student",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<Submission> submissionList = new ArrayList<>();
 
     @ToString.Exclude
-    @JoinTable(name = "student_course",
-            joinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
-    @ManyToMany (fetch = FetchType.EAGER, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-            CascadeType.REFRESH })
+    @JsonManagedReference
+    @ManyToMany (mappedBy = "studentList", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     List<Course> courseList = new ArrayList<>();
 
     public Student(@NonNull String name, @NonNull String email, @NonNull String guardianName, @NonNull String guardianEmail, @NonNull String password) {
@@ -57,7 +56,14 @@ public class Student {
         this.guardianEmail = guardianEmail;
     }
 
-
+    public Student(@NonNull String name, @NonNull String email,  @NonNull String guardianName, @NonNull String guardianEmail, @NonNull String password,List<Course> courseList) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.guardianName = guardianName;
+        this.guardianEmail = guardianEmail;
+        this.courseList = courseList;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -77,7 +83,7 @@ public class Student {
         course.addStudent(this);
     }
 
-    public void dropCourse(Course course) {
+    public void deleteCourse(Course course) {
     this.courseList.remove(course);
     course.deleteStudent(this);
     }

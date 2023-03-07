@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -48,8 +49,9 @@ public class TeacherService {
         teacherRepoI.deleteById(id);
     }
 
-    public void updateTeacher(String name, String email, String password,Integer id){
-        teacherRepoI.setTeacherInfoById(name, email,password,id);
+    public void updateTeacher(String name, String password,Integer id){
+        String bCryptPassword =  new BCryptPasswordEncoder(4).encode(password);
+        teacherRepoI.setTeacherInfoById(name,bCryptPassword,id);
     }
     public Teacher getTeacher(Integer id) throws NoSuchElementException{
         return teacherRepoI.findById(id).orElseThrow();

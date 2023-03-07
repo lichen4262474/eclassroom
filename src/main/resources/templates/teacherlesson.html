@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- <head th:insert="~{fragments/header.html}"> </head> -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <!-- <link href="../static/css/styles.css" rel="stylesheet" /> -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome JS-->
+    <script
+      src="https://kit.fontawesome.com/345ebf7689.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body style="background-color: #eee">
+    <!-- Responsive navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <!-- setting  trigger modal -->
+        <i
+          class="fa-solid fa-gear"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal3"
+          >&nbsp &nbsp</i
+        >
+        <a class="navbar-brand" th:href="@{/teacherhome}">Teacher Home</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                th:href="@{/teacher/course/{courseId}(courseId=${courseId})}"
+                >Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                th:href="@{/teacher/course/{courseId}/announcement(courseId=${courseId})}"
+                >Announcement</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                th:href="@{/teacher/course/{courseId}/lesson(courseId = ${courseId})}"
+                >Lesson</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                th:href="@{/teacher/course/{courseId}/assignment(courseId = ${courseId})}"
+                >Assignment</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                th:href="@{/teacher/course/{courseId}/student(courseId = ${courseId})}"
+                >Student</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                th:href="@{/teacher/course/{courseId}/gradebook(courseId = ${courseId})}"
+                >Gradebook</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- content -->
+    <div class="container">
+      <!-- Lesson -->
+      <!-- Post new lesson -->
+      <div class="card row mx-lg-4 mt-3">
+        <form
+          class="m-1"
+          method="post"
+          th:action="@{/teacher/course/{courseId}/addLesson(courseId=${courseId})}"
+          th:object="${newLesson}"
+        >
+          <input
+            type="text"
+            class="form-control m-1"
+            id="lessonTitle"
+            placeholder="New Lesson Title"
+            th:field="*{title}"
+            required
+          />
+
+          <div class="form-floating">
+            <textarea
+              class="form-control m-1"
+              placeholder="Leave a comment here"
+              id="floatingTextarea2"
+              style="height: 100px"
+              th:field="*{content}"
+              required
+            ></textarea>
+            <label for="floatingTextarea2">Lesson Instruction</label>
+          </div>
+          <input
+            type="text"
+            class="form-control m-1"
+            id="lessonLink"
+            placeholder="Drop resource link here"
+            th:field="*{resourceLink}"
+          />
+          <button type="submit" class="btn btn-primary m-1">Submit</button>
+        </form>
+      </div>
+      <!-- Past Lesson -->
+      <div th:each="lesson:${lessons}">
+        <!-- past lesson content -->
+        <div class="card row mx-lg-4 mt-3">
+          <h5 class="pt-3">
+            <i class="fa-solid fa-book-open-reader"> &nbsp &nbsp</i
+            ><span th:text="${lesson.title}">Lesson</span>
+          </h5>
+          <div th:text="${lesson.content}">
+            This is some text within a card body.
+          </div>
+          <a th:href="${lesson.resourceLink}">resource</a>
+          <div class="text-end text-muted">
+            <span th:text="${lesson.postDateTime}"> 2023-12-23</span>
+            <span>
+              &nbsp &nbsp
+              <a
+                th:href="@{/teacher/course/{courseId}/deleteLesson/{lessonId}(lessonId=${lesson.id},courseId=${courseId})}"
+              >
+                <i class="fa-solid fa-trash-can">&nbsp &nbsp &nbsp</i>
+              </a>
+              <i
+                class="fa-solid fa-pen"
+                data-bs-toggle="modal"
+                th:attr="data-bs-target='#edit-modal'+${lesson.id}"
+                >&nbsp &nbsp
+              </i></span
+            >
+          </div>
+        </div>
+        <!-- edit lesson modal -->
+        <div
+          class="modal fade"
+          th:id="'edit-modal'+${lesson.id}"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Edit Lesson</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form
+                  method="post"
+                  th:id="'form'+${lesson.id}"
+                  th:action="@{/teacher/course/{courseId}/editLesson/{lessonId}(lessonId=${lesson.id},courseId=${courseId})}"
+                  th:object="${editLesson}"
+                >
+                  <label for="edit-title" class="form-label">title</label>
+                  <input
+                    type="text"
+                    id="edit-title"
+                    class="form-control"
+                    aria-describedby="courseNameHelpBlock"
+                    name="title"
+                    th:field="*{title}"
+                    th:placeholder="${lesson.title}"
+                  />
+
+                  <label for="edit-content" class="form-label"
+                    >Content of announcement</label
+                  >
+                  <input
+                    type="textarea"
+                    id="edit-content"
+                    class="form-control"
+                    aria-describedby="courseNameHelpBlock"
+                    name="content"
+                    th:field="*{content}"
+                    th:placeholder="${lesson.content}"
+                  />
+                  <label for="edit-resource-link" class="form-label"
+                    >Content of announcement</label
+                  >
+                  <input
+                    type="text"
+                    id="edit-resource-link"
+                    class="form-control"
+                    aria-describedby="courseNameHelpBlock"
+                    name="resourceLink"
+                    th:field="*{resourceLink}"
+                    th:placeholder="${lesson.resourceLink}"
+                  />
+                </form>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  th:form="'form'+${lesson.id}"
+                >
+                  Save changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

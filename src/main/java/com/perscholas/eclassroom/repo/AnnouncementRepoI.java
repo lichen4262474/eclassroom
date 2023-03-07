@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface AnnouncementRepoI extends JpaRepository<Announcement,Integer> {
 
@@ -14,4 +16,5 @@ public interface AnnouncementRepoI extends JpaRepository<Announcement,Integer> {
     @Modifying
     @Query(value="update Announcement set announcement.title = ?1, announcement.content = ?2, where announcement.id = ?3",nativeQuery = true)
     void setAnnouncementInfoById(String title, String content, Integer id);
+
 }

@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 @Entity
@@ -21,7 +22,7 @@ public class Submission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    LocalDateTime submissionTime = LocalDateTime.now();
+    LocalDateTime submissionTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
     @NonNull
     String submissionLink;
     Integer grade;
@@ -35,6 +36,13 @@ public class Submission {
     @NonNull
     Course course;
 
+    public Submission(@NonNull String submissionLink, Integer grade, @NonNull Assignment assignment, @NonNull Student student, @NonNull Course course) {
+        this.submissionLink = submissionLink;
+        this.grade = grade;
+        this.assignment = assignment;
+        this.student = student;
+        this.course = course;
+    }
 
     @Override
     public boolean equals(Object o) {

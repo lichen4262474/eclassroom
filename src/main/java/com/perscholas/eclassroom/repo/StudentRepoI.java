@@ -14,8 +14,8 @@ import java.util.Optional;
 public interface StudentRepoI extends JpaRepository<Student,Integer> {
     @Transactional
     @Modifying
-    @Query(value="update Student student set student.name = ?1, student.email = ?2, student.password = ?3, student.guardianName = ?4, student.guardianEmail = ?5 where student.id = ?6",nativeQuery = true)
-    void setStudentInfoById(String name, String email, String password, String guardianName, String guardianEmail, Integer id);
+    @Query(value="update Student student set student.name = ?1, student.password = ?2, student.guardian_name = ?3, student.guardian_email = ?4 where student.id = ?5",nativeQuery = true)
+    void setStudentInfoById(String name, String password, String guardianName, String guardianEmail, Integer id);
 
     Student findByEmail(String email);
     @Query(value="select count(*) from Student student where student.email = ?1",nativeQuery = true)

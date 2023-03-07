@@ -29,13 +29,14 @@ public class Teacher {
     @NonNull
     String name;
     @NonNull
+    @Column(unique=true)
     @Email
     String email;
     @NonNull
 //    @Size(min = 6, max = 10)
     String password;
 
-    @OneToMany(mappedBy = "teacher",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @OneToMany(mappedBy = "teacher",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<Course> courseList = new ArrayList<>();
 
     public Teacher(@NonNull String name, @NonNull String email, @NonNull String password) {
@@ -61,5 +62,9 @@ public class Teacher {
 
    public void addCourse(Course course){
         this.courseList.add(course);
+    }
+
+    public void deleteCourse(Course course){
+        this.courseList.remove(course);
     }
 }

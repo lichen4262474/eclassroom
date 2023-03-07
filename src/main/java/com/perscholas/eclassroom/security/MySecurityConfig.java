@@ -56,7 +56,7 @@ public class MySecurityConfig {
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .loginProcessingUrl("/login/processing")
-                        .defaultSuccessUrl("/home")
+                        .defaultSuccessUrl("/home", true)
 //                        .failureUrl("/index")
                         .permitAll()
                 )
