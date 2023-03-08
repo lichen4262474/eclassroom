@@ -33,12 +33,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
         <!-- setting  trigger modal -->
-        <i
-          class="fa-solid fa-gear"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal3"
-          >&nbsp &nbsp</i
-        >
+
         <a class="navbar-brand" th:href="@{/studenthome}">Student Home</a>
         <button
           class="navbar-toggler"
@@ -93,6 +88,13 @@
       <main>
         <div class="container-fluid px-4">
           <h1 class="mt-4" th:text="${course.name}">Charts</h1>
+          <p>
+            <i class="fa-regular fa-envelope fa-xl"></i>
+            Contact Instructor:
+            <a th:href="'mailto:' + ${course.teacher.email}"
+              ><span th:text="${course.teacher.name}">Teacher name</span></a
+            >
+          </p>
           <div class="card mb-4">
             <div class="card-body">
               Chart.js is a third party plugin that is used to generate the

@@ -21,7 +21,9 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -72,7 +74,6 @@ public class TeacherController {
         AuthGroup auth = new AuthGroup(teacher.getEmail(),"teacher");
         log.warn("create auth + "+ teacher.getName());
         authGroupRepoI.save(auth);
-//        RedirectView redirectView = new RedirectView("index");
         return "index";
     }
 
@@ -120,12 +121,6 @@ public class TeacherController {
         return redirectView;
     }
 
-    @GetMapping("/getCourseList")
-    public String getCourseList(Model model,Principal principal){
-        Teacher teacher = teacherService.findTeacherByEmail(principal.getName());
-        model.addAttribute(teacher.getCourseList());
-        return "teacherhome";
-    }
 
     @GetMapping("/course/{courseId}")
     public String goToCourse(@PathVariable("courseId") Integer id,Model model){
@@ -323,10 +318,17 @@ public class TeacherController {
 
     @GetMapping("/course/{courseId}/gradebook")
     public String getAllGrades(@PathVariable("courseId") Integer courseId,Model model){
-        List<Student> studentList = courseService.getCourseByID(courseId).getStudentList();
-        List<Assignment> assignmentList = courseService.getCourseByID(courseId).getAssignmentList();
-        model.addAttribute("studentList",studentList);
+        Course course = courseService.getCourseByID(courseId);
+        List<Student> studentList = course.getStudentList();
+        List<Assignment> assignmentList = course.getAssignmentList();
+        Map<Student,List<Integer>> studentGradesMap = new HashMap<>();
+        for(Student student : studentList) {
+            studentGradesMap.put(student, submissionService.getStudentGradesForCourse(student,course));
+            log.warn( student.getName() + submissionService.getStudentGradesForCourse(student,course));
+        }
+//        model.addAttribute("studentList",studentList);
         model.addAttribute("assignmentList",assignmentList);
+        model.addAttribute("studentGradesMap",studentGradesMap);
         return"teachergradebook";
 
     }

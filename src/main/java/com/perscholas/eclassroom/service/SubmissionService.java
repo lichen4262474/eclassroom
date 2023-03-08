@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.ast.Assign;
 import org.springframework.stereotype.Service;
 
 import java.sql.Array;
@@ -50,16 +51,13 @@ public class SubmissionService {
         submissionRepoI.save(submission);
     }
 
-    public void deleteSubmission(Integer id) {
-        submissionRepoI.deleteById(id);
-    }
 
     public void updateSubmission(String submissionLink, Integer id) {
         submissionRepoI.setSubmissionInfoById(submissionLink, id);
     }
 
-    public Submission getOneSubmission(Integer id) throws NoSuchElementException {
-        return submissionRepoI.findById(id).orElseThrow();
+    public Submission getSubmission(Student student, Assignment assignment){
+        return submissionRepoI.findByStudentAndAssignment(student, assignment);
     }
 
     public List<Submission> getAllSubmissionForAsgmt(Assignment asgmt) {
@@ -86,12 +84,21 @@ public class SubmissionService {
         assignmentRepoI.save(asgmt);
     }
 
-    public void updateAllGradeForStudent(Student student, List<Integer> grades) {
-        List<Submission> submissionList = this.getAllSubmissionForStudent(student);
-        for (int i = 0; i < submissionList.size(); i++) {
-            submissionList.get(i).setGrade(grades.get(i));
-        }
-    }
+     public List<Integer> getStudentGradesForCourse(Student student,Course course) {
+         List<Integer> grades = new ArrayList<>();
+         List<Assignment> assignments = course.getAssignmentList();
+         for (Assignment each : assignments) {
+             Submission submission = submissionRepoI.findByStudentAndAssignment(student, each);
+             if (submission == null) {
+                 grades.add(-1);
+             } else if(submission.getGrade()==null){
+                 grades.add(-2);
+             }else{
+                 grades.add(submission.getGrade());
+             }
+         }
+         return grades;
+     }
 
     public IntSummaryStatistics getGradeStatsForCourse(Course course){
         List<Submission> submissionList = this.getAllSubmissionForCourse(course);

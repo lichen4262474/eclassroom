@@ -107,12 +107,16 @@
           <th th:text = "${assignment.title}">Assignment 1</th>
           </div>
         </tr>
-          <tr th:each = "student:${studentList}">
-            <td th:text="${student.id}">1</td>
-            <td th:text="${student.name}">Li Chen</td>
-            <div th:each ="submission: ${student.submissionList} ">
-            <td th:text = "${submission.grade}">100</td>
+          <tr th:each = "studentMap:${studentGradesMap}">
+            <td th:text="${studentMap.key.id}">1</td>
+            <td th:text="${studentMap.key.name}">Li Chen</td>
+            <div th:each = "grade:${studentMap.value}">
+              <div th:switch ="${grade}">
+                 <td th:case = "-1" >unsubmitted</td>
+                 <td th:case = "-2" >Ungraded</td>
+                 <td th:case = "*" th:text = "${grade}"></td>
             </div>
+          </div>
           </tr>
       </table>
   </body>

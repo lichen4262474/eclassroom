@@ -3,7 +3,6 @@ package com.perscholas.eclassroom.service;
 import com.perscholas.eclassroom.models.Student;
 import com.perscholas.eclassroom.models.Teacher;
 import com.perscholas.eclassroom.repo.*;
-import com.perscholas.eclassroom.dto.CourseDTO;
 import com.perscholas.eclassroom.models.Course;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -79,15 +78,15 @@ public class CourseService {
         studentRepoI.save(student);}
 
     }
-    public List<CourseDTO> getAllCourseEssInfo() {
-        return courseRepoI
-                .findAll()
-                .stream()
-                .map((course) -> {
-                    return new CourseDTO(course.getName(),course.getDescription(),course.getSchedule(),course.getZoom() );
-                })
-                .collect(Collectors.toList());
-    }
+//    public List<CourseDTO> getAllCourseEssInfo() {
+//        return courseRepoI
+//                .findAll()
+//                .stream()
+//                .map((course) -> {
+//                    return new CourseDTO(course.getName(),course.getDescription(),course.getSchedule(),course.getZoom() );
+//                })
+//                .collect(Collectors.toList());
+//    }
 
     public List<Course> getAllCourse() {
 

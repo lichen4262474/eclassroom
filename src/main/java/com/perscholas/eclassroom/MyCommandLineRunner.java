@@ -117,11 +117,11 @@ import java.util.List;
             studentService.saveStudent(student5);
             studentService.saveStudent(student6);
 
-            Course coursea = new Course(1,"English1","Freshman Course","www.zoom1.com","9:00-10:00AM", teacher1);
-            Course courseb = new Course(2,"English2","Sophomore Course","www.zoom2.com","10:00-11:00AM", teacher1);
-            Course coursec = new Course(3,"English3","Junior Course","www.zoom3.com","08:00-09:00AM", teacher1);
-            Course coursed = new Course(4,"English4","Senior Course","www.zoom4.com","1:00-2:00AM", teacher1);
-            Course coursee = new Course(5,"English5","AP Course","www.zoom5.com","2:00-3:00PM", teacher1);
+            Course coursea = new Course(1,"English1","Freshman Course","https://perscholas.org","9:00-10:00AM", teacher1);
+            Course courseb = new Course(2,"English2","Sophomore Course","https://perscholas.org","10:00-11:00AM", teacher1);
+            Course coursec = new Course(3,"English3","Junior Course","https://perscholas.org","08:00-09:00AM", teacher1);
+            Course coursed = new Course(4,"English4","Senior Course","https://perscholas.org","1:00-2:00AM", teacher1);
+            Course coursee = new Course(5,"English5","AP Course","https://perscholas.org","2:00-3:00PM", teacher1);
 
             courseService.addCourseForStudent(coursea,student1);
             courseService.addCourseForStudent(courseb,student1);
@@ -166,9 +166,9 @@ import java.util.List;
             assignmentService.saveAssignment(assignment2);
             assignmentService.saveAssignment(assignment3);
 
-            Submission submission1 = new Submission("https://perscholas.org/",100,assignment1,student1,course1);
+//            Submission submission1 = new Submission("https://perscholas.org/",100,assignment1,student1,course1);
             Submission submission2 = new Submission("https://www.wikipedia.com/",90,assignment1,student2,course1);
-            Submission submission3 = new Submission("https://www.codecademy.com/learn",80,assignment1,student3,course1);
+            Submission submission3 = new Submission("https://www.codecademy.com/learn",assignment1,student3,course1);
             Submission submission4 = new Submission("https://regex101.com/",70,assignment1,student4,course1);
             Submission submission5 = new Submission("https://www.udemy.com/",60,assignment1,student5,course1);
             Submission submission6 = new Submission("https://www.coursera.org/",50,assignment1,student6,course1);
@@ -187,7 +187,7 @@ import java.util.List;
             Submission submission17 = new Submission("https://www.udemy.com/",60,assignment3,student5,course1);
             Submission submission18 = new Submission("https://www.coursera.org/",50,assignment3,student6,course1);
 
-            submissionService.saveSubmission(submission1);
+//            submissionService.saveSubmission(submission1);
             submissionService.saveSubmission(submission2);
             submissionService.saveSubmission(submission3);
             submissionService.saveSubmission(submission4);

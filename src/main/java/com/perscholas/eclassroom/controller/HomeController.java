@@ -1,6 +1,5 @@
 package com.perscholas.eclassroom.controller;
 
-import com.perscholas.eclassroom.dto.CourseDTO;
 import com.perscholas.eclassroom.models.Course;
 import com.perscholas.eclassroom.models.Student;
 import com.perscholas.eclassroom.models.Teacher;

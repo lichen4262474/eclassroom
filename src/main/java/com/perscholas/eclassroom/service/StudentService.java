@@ -1,7 +1,6 @@
 package com.perscholas.eclassroom.service;
 
 import com.perscholas.eclassroom.repo.*;
-import com.perscholas.eclassroom.dto.StudentDTO;
 import com.perscholas.eclassroom.models.Student;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -68,15 +67,15 @@ public class StudentService {
     public Student getStudent(Integer id) throws NoSuchElementException {
         return studentRepoI.findById(id).orElseThrow();
     }
-    public List<StudentDTO> getAllStudentsEssInfo() {
-
-        return studentRepoI
-                .findAll()
-                .stream()
-                .map((oneStudent) -> {
-                    return new StudentDTO(oneStudent.getId(), oneStudent.getName(), oneStudent.getEmail(), oneStudent.getGuardianName(), oneStudent.getGuardianName());
-                })
-                .collect(Collectors.toList());
-    }
+//    public List<StudentDTO> getAllStudentsEssInfo() {
+//
+//        return studentRepoI
+//                .findAll()
+//                .stream()
+//                .map((oneStudent) -> {
+//                    return new StudentDTO(oneStudent.getId(), oneStudent.getName(), oneStudent.getEmail(), oneStudent.getGuardianName(), oneStudent.getGuardianName());
+//                })
+//                .collect(Collectors.toList());
+//    }
 
 }

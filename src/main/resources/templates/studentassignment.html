@@ -30,13 +30,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
         <!-- setting  trigger modal -->
-        <i
-          class="fa-solid fa-gear"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal3"
-          >&nbsp &nbsp</i
-        >
-        <a class="navbar-brand" th:href="@{/teacherhome}">Student Home</a>
+        <a class="navbar-brand" th:href="@{/studenthome}">Student Home</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -86,30 +80,39 @@
     <!-- content -->
     <div class="container">
       <!-- Lesson -->
-
       <!-- Past Assignment -->
-      <div th:each="assignment:${assignments}">
+      <div th:each="assignment,stat:${assignmentWithSubmission}">
         <!-- Past Assignment content-->
         <div class="card row mx-lg-4 mt-3">
           <h5 class="pt-3">
             <i class="fa-regular fa-clipboard"> &nbsp &nbsp</i>
-            <span th:text="${assignment.title}">Assignment 1</span>
+            <span th:text="${assignment.key.title}">Assignment 1</span>
           </h5>
           <div class="row text-muted">
-            <div class="col-auto">Post Date <span>08/29/2012</span></div>
-            <div class="col-auto">Due Date <span>08/29/2012</span></div>
-            <div class="col-auto">Submitted <span>Yes/No</span></div>
-            <div class="col-auto">Grade <span>100 points</span></div>
+            <div class="col-auto">
+              Post Date
+              <span th:text="${assignment.key.postDateTime}">08/29/2012</span>
+            </div>
+            <div class="col-auto">
+              Due Date
+              <span th:text="${assignment.key.dueDate}">08/29/2012</span>
+            </div>
+            <div class="col-auto">
+          
+            <div class="col-auto">Grade: 
+              <span th:if="${assignment.value == -1}">Unsubmitted</span>
+              <span th:unless="${assignment.value == -1}" th:text = "${assignment.value}"></span>
+            </div>
           </div>
-          <div th:text="${assignment.content}">
+          <div th:text="${assignment.key.content}">
             This is some text within a card body.
           </div>
-          <a th:href="${assignment.resourceLink}">resource</a>
+          <a th:href="${assignment.key.resourceLink}">resource</a>
           <div class="text-end text-muted">
             <i
               class="fa-solid fa-arrow-up-from-bracket"
               data-bs-toggle="modal"
-              th:attr="data-bs-target='#edit-assignment'+${assignment.id}"
+              th:attr="data-bs-target='#submit-assignment'+${assignment.key.id}"
               >&nbsp &nbsp
             </i>
           </div>
@@ -117,7 +120,7 @@
         <!-- upload assignment modal -->
         <div
           class="modal fade"
-          th:id="'edit-assignment'+${assignment.id}"
+          th:id="'submit-assignment'+${assignment.key.id}"
           tabindex="-1"
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
@@ -125,7 +128,9 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Submit Assignment</h5>
+                <h5 class="modal-title">
+                  Submit SharedLink for your assignment
+                </h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -136,32 +141,17 @@
               <div class="modal-body">
                 <form
                   method="post"
-                  th:id="'form'+${assignment.id}"
-                  th:action="@{/teacher/course/{courseId}/editAssignment/{assignmentId}(assignmentId=${assignment.id},courseId=${courseId})}"
-                  th:object="${editAssignment}"
+                  th:id="'submission-form'+${assignment.key.id}"
+                  th:action="@{/student/course/{courseId}/submitAssignment/{assignmentId}(assignmentId=${assignment.key.id},courseId=${courseId})}"
                 >
-                  <label for="title" class="form-label">title</label>
+                  <label for="title" class="form-label">Submission Link</label>
                   <input
-                    type="text"
-                    id="title"
+                    type="url"
+                    id="submissionLink"
                     class="form-control"
                     aria-describedby="courseNameHelpBlock"
-                    name="title"
-                    th:field="*{title}"
-                    th:placeholder="${assignment.title}"
-                  />
-
-                  <label for="content" class="form-label"
-                    >Content of announcement</label
-                  >
-                  <input
-                    type="textarea"
-                    id="content"
-                    class="form-control"
-                    aria-describedby="courseNameHelpBlock"
-                    name="content"
-                    th:field="*{content}"
-                    th:placeholder="${assignment.content}"
+                    name="submissionLink"
+                    th:text="*{submissionLink}"
                   />
                 </form>
               </div>
@@ -177,7 +167,7 @@
                 <button
                   type="submit"
                   class="btn btn-primary"
-                  th:form="'form'+${assignment.id}"
+                  th:form="'submission-form'+${assignment.key.id}"
                 >
                   Save changes
                 </button>

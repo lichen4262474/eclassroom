@@ -1,9 +1,6 @@
 package com.perscholas.eclassroom.controller;
 
-import com.perscholas.eclassroom.models.AuthGroup;
-import com.perscholas.eclassroom.models.Course;
-import com.perscholas.eclassroom.models.Student;
-import com.perscholas.eclassroom.models.Teacher;
+import com.perscholas.eclassroom.models.*;
 import com.perscholas.eclassroom.repo.AuthGroupRepoI;
 import com.perscholas.eclassroom.repo.CourseRepoI;
 import com.perscholas.eclassroom.service.*;
@@ -14,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.lang.reflect.Array;
 import java.security.Principal;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -32,6 +31,7 @@ public class StudentController {
     StudentService studentService;
     SubmissionService submissionService;
     TeacherService teacherService;
+
     @Autowired
     public StudentController(AuthGroupRepoI authGroupRepoI, AnnouncementService announcementService, AssignmentService assignmentService, CourseService courseService, LessonService lessonService, StudentService studentService, SubmissionService submissionService, TeacherService teacherService) {
         this.authGroupRepoI = authGroupRepoI;
@@ -67,10 +67,7 @@ public class StudentController {
         return redirectView;
     }
 
-    @ModelAttribute
-    public void theStudent( Model model){
-        model.addAttribute("theStudent", new Student());
-    }
+    //Course Data Manipulation
 
     @PostMapping("/addCourse")
     public RedirectView studentAddCourse(@RequestParam(value = "addCourseId", required = true)Integer addCourseId, Principal principal){
@@ -92,6 +89,73 @@ public class StudentController {
         return redirectView;
     }
 
+    @GetMapping("/course/{courseId}")
+    public String goToCourse(@PathVariable("courseId") Integer id,Model model){
+        Course course = courseService.getCourseByID(id);
+        model.addAttribute("course",course);
+        return "studentclasshome";
+    }
 
+    @GetMapping("/studentclasshome")
+    public String showTeacherClassHome(Model model){
+        model.addAttribute("course",new Course());
+        return "studentclasshome";
+    }
+    //   announcement data manipulation
+    @GetMapping("/course/{courseId}/announcement")
+    public String getAnnouncements(@PathVariable("courseId") Integer id,Model model){
+        Course course =courseService.getCourseByID(id);
+        List<Announcement> announcements = course.getAnouncementList();
+        model.addAttribute("announcements",announcements);
+        return "studentannouncement";
+    }
+
+    //    lesson data manipulation
+    @GetMapping("/course/{courseId}/lesson")
+    public String getLessons(@PathVariable("courseId") Integer id, Model model) {
+        List<Lesson> lessons = lessonService.getAllLessonByCourse(id);
+        for(Lesson lesson: lessons) {
+            log.warn("getting lesson list" + lesson.getTitle());
+        }
+        model.addAttribute("lessons", lessons);
+        return "studentlesson";
+    }
+
+    //    assignment data manipulation
+    @GetMapping("/course/{courseId}/assignment")
+    public String getAssignments(@PathVariable("courseId") Integer id, Model model,Principal principal){
+        Course course =courseService.getCourseByID(id);
+        Student student = studentService.findStudentByEmail(principal.getName());
+        List<Assignment> assignments = course.getAssignmentList();
+        Map<Assignment,Integer> assignmentWithSubmission = new HashMap<>();
+        for(int i =0; i< assignments.size();i++){
+            try {
+                assignmentWithSubmission.put(assignments.get(i), submissionService.getSubmission(student, assignments.get(i)).getGrade());
+                log.warn("entry added assignment name: " + assignments.get(i).getTitle() + "grade: " + submissionService.getSubmission(student, assignments.get(i)).getGrade() );
+            }catch(NullPointerException ex){
+                assignmentWithSubmission.put(assignments.get(i),-1);
+            }
+        }
+
+        model.addAttribute("assignmentWithSubmission", assignmentWithSubmission);
+        return "studentassignment";
+    }
+
+    @PostMapping("/course/{courseId}/submitAssignment/{assignmentId}")
+    public RedirectView subAssignment(Principal principal,@RequestParam("submissionLink") String submissionLink, @PathVariable("courseId") Integer courseId,@PathVariable("assignmentId") Integer assignmentId){
+        Student student = studentService.findStudentByEmail(principal.getName());
+        Assignment assignment = assignmentService.getAssignment(assignmentId);
+        Course course = courseService.getCourseByID(courseId);
+        Submission newSubmission = new Submission(submissionLink,assignment,student,course);
+        submissionService.saveSubmission(newSubmission);
+        log.warn("A new Submission has been created" + newSubmission.getId());
+        RedirectView redirectView = new RedirectView("/student/course/{courseId}/assignment");
+        return redirectView;
+    }
+
+    @GetMapping("/studentassignment")
+    public String showAssignments(Model model){
+        return "studentassignment";
+    }
 
 }

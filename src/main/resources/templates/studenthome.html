@@ -36,7 +36,7 @@
           data-bs-target="#exampleModal3"
           >&nbsp &nbsp</i
         >
-        <a class="navbar-brand" href="#">Student Home</a>
+        <a class="navbar-brand" href="/studenthome">Student Home</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -335,15 +335,18 @@
               <p class="card-text" th:text="${course.schedule}"></p>
               <a class="card-text" th:href="${course.zoom}"> course zoom </a>
               <p></p>
-              <a href="#" class="btn btn-primary">Go to class</a>
+              <a
+                href="#"
+                class="btn btn-primary"
+                th:href="@{/student/course/{id}(id = ${course.id})}"
+                >Go to class</a
+              >
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Core theme JS-->
-    <script src="../static/js/studentHomeScript.js"></script>
     <!-- script to validate password -->
     <script>
       var repeatPasswordCheck = function () {

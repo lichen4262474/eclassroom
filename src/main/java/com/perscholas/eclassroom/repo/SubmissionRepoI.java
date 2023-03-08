@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Repository
 public interface SubmissionRepoI extends JpaRepository<Submission,Integer> {
@@ -29,4 +30,7 @@ public interface SubmissionRepoI extends JpaRepository<Submission,Integer> {
     List<Submission> findByStudent(Student student);
 
     List<Submission> findByCourse(Course course);
+
+
+    Submission findByStudentAndAssignment(Student student, Assignment assignment);
 }
