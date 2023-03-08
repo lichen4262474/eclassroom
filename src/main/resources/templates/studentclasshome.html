@@ -39,7 +39,7 @@
           data-bs-target="#exampleModal3"
           >&nbsp &nbsp</i
         >
-        <a class="navbar-brand" th:href="@{/teacherhome}">Teacher Home</a>
+        <a class="navbar-brand" th:href="@{/studenthome}">Student Home</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -56,43 +56,29 @@
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{/teacher/course/{courseId}(courseId=${courseId})}"
+                th:href="@{/student/course/{courseId}(courseId=${courseId})}"
                 >Dashboard
               </a>
             </li>
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{/teacher/course/{courseId}/announcement(courseId=${courseId})}"
+                th:href="@{/student/course/{courseId}/announcement(courseId=${courseId})}"
                 >Announcement</a
               >
             </li>
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{/teacher/course/{courseId}/lesson(courseId = ${courseId})}"
+                th:href="@{/student/course/{courseId}/lesson(courseId = ${courseId})}"
                 >Lesson</a
               >
             </li>
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{/teacher/course/{courseId}/assignment(courseId = ${courseId})}"
+                th:href="@{/student/course/{courseId}/assignment(courseId = ${courseId})}"
                 >Assignment</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                th:href="@{/teacher/course/{courseId}/student(courseId = ${courseId})}"
-                >Student</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                th:href="@{/teacher/course/{courseId}/gradebook(courseId = ${courseId})}"
-                >Gradebook</a
               >
             </li>
           </ul>

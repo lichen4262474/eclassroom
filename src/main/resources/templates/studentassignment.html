@@ -36,7 +36,7 @@
           data-bs-target="#exampleModal3"
           >&nbsp &nbsp</i
         >
-        <a class="navbar-brand" th:href="@{/teacherhome}">Teacher Home</a>
+        <a class="navbar-brand" th:href="@{/teacherhome}">Student Home</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -51,43 +51,31 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" th:href="@{/teacher/course/{courseId}(courseId=${courseId})}"
+              <a
+                class="nav-link"
+                th:href="@{/student/course/{courseId}(courseId=${courseId})}"
                 >Dashboard
               </a>
             </li>
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{/teacher/course/{courseId}/announcement(courseId=${courseId})}"
+                th:href="@{/student/course/{courseId}/announcement(courseId=${courseId})}"
                 >Announcement</a
               >
             </li>
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{/teacher/course/{courseId}/lesson(courseId = ${courseId})}"
+                th:href="@{/student/course/{courseId}/lesson(courseId = ${courseId})}"
                 >Lesson</a
               >
             </li>
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{/teacher/course/{courseId}/assignment(courseId = ${courseId})}"
+                th:href="@{/student/course/{courseId}/assignment(courseId = ${courseId})}"
                 >Assignment</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                th:href="@{/teacher/course/{courseId}/student(courseId = ${courseId})}"
-                >Student</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                th:href="@{/teacher/course/{courseId}/gradebook(courseId = ${courseId})}"
-                >Gradebook</a
               >
             </li>
           </ul>
@@ -98,85 +86,35 @@
     <!-- content -->
     <div class="container">
       <!-- Lesson -->
-      <!-- Post new Assignment -->
-      <div class="card row mx-lg-4 mt-3">
-        <form class="m-1"
-          method="post"
-          th:action="@{/teacher/course/{courseId}/addAssignment(courseId=${courseId})}"
-          th:object="${newAssignment}"
-          >
-          <input
-            type="text"
-            class="form-control m-1"
-            id="lessonTitle"
-            placeholder="New Assignment Title"
-            th:field="*{title}"
-            name = "title"
-            required
-          />
 
-          <div class="form-floating">
-            <textarea
-              class="form-control m-1"
-              placeholder="Leave a comment here"
-              id="floatingTextarea2"
-              style="height: 100px"
-               th:field="*{content}"
-               name = "content"
-              required
-            ></textarea>
-          <label for="floatingTextarea2">Assignment Details</label>
-          </div>
-          <input
-            type="text"
-            class="form-control m-1"
-            id="lessonLink"
-            placeholder="Drop resource link here"
-            th:field="*{resourceLink}"
-            name="resourceLink"
-          />
-          <div class ="row justify-content-end ">
-          <div class="col-auto">
-          <label  class="col-form-label "for="duedate"> &nbsp Due Date</label>
-          </div>
-        
-        <div class="col-auto">
-          <input  class="form-control m-1 "type="date" id="duedate" name="dueDate" th:field="*{dueDate}" required>
-        </div>
-          <div class="col-auto">
-          <button type="submit" class="btn btn-primary m-1">Submit</button>
-          </div>
-          </div>
-        </form>
-      </div>
       <!-- Past Assignment -->
-      <div th:each ="assignment:${assignments}">
+      <div th:each="assignment:${assignments}">
         <!-- Past Assignment content-->
-      <div class="card row mx-lg-4 mt-3">
-        <h5 class="pt-3">
-          <i class="fa-regular fa-clipboard"> &nbsp &nbsp</i> 
-          <span th:text = ${assignment.title}>Assignment 1</span>
-        </h5>
-        <div class = "text-muted">Due date : <span th:text = ${assignment.dueDate}> 2013-08-23 08:30</span></div>
-        <div th:text = ${assignment.content}>This is some text within a card body.</div>
-        <a th:href="${assignment.resourceLink}">resource</a>
-        <div class="text-end text-muted">
-          <span th:text = "${assignment.postDateTime}">
-          2023-12-23
-          </span>
-            &nbsp &nbsp
-             <a
-                th:href="@{/teacher/course/{courseId}/deleteAssignment/{assignmentId}(assignmentId=${assignment.id},courseId=${courseId})}"
-              ><i class="fa-solid fa-trash-can">&nbsp &nbsp &nbsp</i>
-             </a>
-            <i class="fa-solid fa-pen"
-             data-bs-toggle="modal"
-            th:attr="data-bs-target='#edit-assignment'+${assignment.id}">&nbsp &nbsp </i> 
-            <a th:href="@{/teacher/course/{courseId}/gradeAssignment/{assignmentId}(assignmentId=${assignment.id},courseId=${courseId})}"><i class="fa-solid fa-spell-check">&nbsp &nbsp</i></a></span
-          >
+        <div class="card row mx-lg-4 mt-3">
+          <h5 class="pt-3">
+            <i class="fa-regular fa-clipboard"> &nbsp &nbsp</i>
+            <span th:text="${assignment.title}">Assignment 1</span>
+          </h5>
+          <div class="row text-muted">
+            <div class="col-auto">Post Date <span>08/29/2012</span></div>
+            <div class="col-auto">Due Date <span>08/29/2012</span></div>
+            <div class="col-auto">Submitted <span>Yes/No</span></div>
+            <div class="col-auto">Grade <span>100 points</span></div>
+          </div>
+          <div th:text="${assignment.content}">
+            This is some text within a card body.
+          </div>
+          <a th:href="${assignment.resourceLink}">resource</a>
+          <div class="text-end text-muted">
+            <i
+              class="fa-solid fa-arrow-up-from-bracket"
+              data-bs-toggle="modal"
+              th:attr="data-bs-target='#edit-assignment'+${assignment.id}"
+              >&nbsp &nbsp
+            </i>
+          </div>
         </div>
-      </div>
-       <!-- edit announcement modal -->
+        <!-- upload assignment modal -->
         <div
           class="modal fade"
           th:id="'edit-assignment'+${assignment.id}"
@@ -187,7 +125,7 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Edit Assignment</h5>
+                <h5 class="modal-title">Submit Assignment</h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -247,7 +185,7 @@
             </div>
           </div>
         </div>
-    </div>
+      </div>
     </div>
   </body>
 </html>

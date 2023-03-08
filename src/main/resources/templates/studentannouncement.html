@@ -36,7 +36,7 @@
           data-bs-target="#exampleModal3"
           >&nbsp &nbsp</i
         >
-        <a class="navbar-brand" th:href="@{/teacherhome}">Teacher Home</a>
+        <a class="navbar-brand" th:href="@{/teacherhome}">Student Home</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -53,43 +53,29 @@
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{/teacher/course/{courseId}(courseId=${courseId})}"
+                th:href="@{/student/course/{courseId}(courseId=${courseId})}"
                 >Dashboard
               </a>
             </li>
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{/teacher/course/{courseId}/announcement(courseId=${courseId})}"
+                th:href="@{/student/course/{courseId}/announcement(courseId=${courseId})}"
                 >Announcement</a
               >
             </li>
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{/teacher/course/{courseId}/lesson(courseId = ${courseId})}"
+                th:href="@{/student/course/{courseId}/lesson(courseId = ${courseId})}"
                 >Lesson</a
               >
             </li>
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{/teacher/course/{courseId}/assignment(courseId = ${courseId})}"
+                th:href="@{/student/course/{courseId}/assignment(courseId = ${courseId})}"
                 >Assignment</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                th:href="@{/teacher/course/{courseId}/student(courseId = ${courseId})}"
-                >Student</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                th:href="@{/teacher/course/{courseId}/gradebook(courseId = ${courseId})}"
-                >Gradebook</a
               >
             </li>
           </ul>
@@ -99,50 +85,28 @@
 
     <!-- content -->
     <div class="container">
-      <!-- student info -->
-      <table class="table table-hover">
-        <tr>
-          <th>ID</th>
-          <th>Student Name</th>
-          <th>Student Email</th>
-          <th>Guardian Name</th>
-          <th>Guardian Email</th>
-          <th>Course Enrolled</th>
-          <th>Unenroll</th>
-        </tr>
-        <div th:each="student:${students}">
-          <tr>
-            <td th:text="${student.id}">1</td>
-            <td th:text="${student.name}">Li Chen</td>
-            <td>
-              <a
-                th:text="${student.email}"
-                th:href="'mailto:' + ${student.email}"
-                >lichen@gmail.com</a
-              >
-            </td>
-            <td th:text="${student.guardianName}">Yanjun Chen</td>
-            <td>
-              <a
-                th:text="${student.guardianEmail}"
-                th:href="'mailto:' + ${student.guardianEmail}"
-                >YanjuChen@gmail.com</a
-              >
-            </td>
-            <td th:text="${#strings.listJoin(student.courseList, ' ')}">
-              Math 1, English 2
-            </td>
-            <td>
-              <a
-                class="text-primary"
-                th:href="@{/teacher/course/{courseId}/student/unenroll/{studentId}(courseId=${courseId},studentId=${student.id})}"
-              >
-                unenroll</a
-              >
-            </td>
-          </tr>
+      <!-- Announcement -->
+      <!-- Past Announcment -->
+
+      <div th:each="announcement:${announcements}">
+        <!-- past announcement content -->
+        <div class="card row mx-lg-4 mt-3">
+          <h5 class="pt-3">
+            <i class="fa-solid fa-bullhorn"> &nbsp &nbsp</i
+            ><span th:text="${announcement.title}">Announcement</span>
+          </h5>
+          <div th:text="${announcement.content}">
+            This is some text within a card body.
+          </div>
+          <div
+            class="text-end text-muted"
+            id="postDateTime"
+            th:text="${announcement.postDateTime}"
+          >
+            2023-12-23
+          </div>
         </div>
-      </table>
+      </div>
     </div>
   </body>
 </html>

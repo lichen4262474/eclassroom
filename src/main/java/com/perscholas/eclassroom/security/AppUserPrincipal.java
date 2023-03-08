@@ -20,7 +20,7 @@ public class AppUserPrincipal implements UserDetails {
     private Student student;
     private List<AuthGroup> authGroup ;
     private Teacher teacher;
-@Autowired
+    @Autowired
     public AppUserPrincipal(Student student, List<AuthGroup> authGroup) {
         this.student = student;
         this.authGroup = authGroup;

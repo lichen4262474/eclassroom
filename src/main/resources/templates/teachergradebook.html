@@ -66,28 +66,28 @@
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{teacher/course/{courseId}/lesson(courseId = ${courseId})}"
+                th:href="@{/teacher/course/{courseId}/lesson(courseId = ${courseId})}"
                 >Lesson</a
               >
             </li>
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{teacher/course/{courseId}/assignment(courseId = ${courseId})}"
+                th:href="@{/teacher/course/{courseId}/assignment(courseId = ${courseId})}"
                 >Assignment</a
               >
             </li>
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{teacher/course/{courseId}/student(courseId = ${courseId})}"
+                th:href="@{/teacher/course/{courseId}/student(courseId = ${courseId})}"
                 >Student</a
               >
             </li>
             <li class="nav-item">
               <a
                 class="nav-link"
-                th:href="@{teacher/course/{courseId}/gradebook(courseId = ${courseId})}"
+                th:href="@{/teacher/course/{courseId}/gradebook(courseId = ${courseId})}"
                 >Gradebook</a
               >
             </li>
@@ -98,6 +98,22 @@
 
     <!-- content -->
     <div class="container">
-    
+      <!-- student info -->
+      <table class="table table-hover">
+        <tr>
+          <th>ID</th>
+          <th>Student Name</th>
+          <div th:each="assignment:${assignmentList}">
+          <th th:text = "${assignment.title}">Assignment 1</th>
+          </div>
+        </tr>
+          <tr th:each = "student:${studentList}">
+            <td th:text="${student.id}">1</td>
+            <td th:text="${student.name}">Li Chen</td>
+            <div th:each ="submission: ${student.submissionList} ">
+            <td th:text = "${submission.grade}">100</td>
+            </div>
+          </tr>
+      </table>
   </body>
 </html>

@@ -45,8 +45,6 @@ public class Teacher {
         this.password = new BCryptPasswordEncoder(4).encode(password);
     }
 
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

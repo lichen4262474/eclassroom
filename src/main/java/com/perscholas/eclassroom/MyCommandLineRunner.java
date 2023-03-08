@@ -173,12 +173,40 @@ import java.util.List;
             Submission submission5 = new Submission("https://www.udemy.com/",60,assignment1,student5,course1);
             Submission submission6 = new Submission("https://www.coursera.org/",50,assignment1,student6,course1);
 
+            Submission submission7 = new Submission("https://perscholas.org/",100,assignment2,student1,course1);
+            Submission submission8 = new Submission("https://www.wikipedia.com/",90,assignment2,student2,course1);
+            Submission submission9 = new Submission("https://www.codecademy.com/learn",80,assignment2,student3,course1);
+            Submission submission10 = new Submission("https://regex101.com/",70,assignment2,student4,course1);
+            Submission submission11 = new Submission("https://www.udemy.com/",60,assignment2,student5,course1);
+            Submission submission12 = new Submission("https://www.coursera.org/",50,assignment2,student6,course1);
+
+            Submission submission13 = new Submission("https://perscholas.org/",100,assignment3,student1,course1);
+            Submission submission14 = new Submission("https://www.wikipedia.com/",90,assignment3,student2,course1);
+            Submission submission15 = new Submission("https://www.codecademy.com/learn",80,assignment3,student3,course1);
+            Submission submission16 = new Submission("https://regex101.com/",70,assignment3,student4,course1);
+            Submission submission17 = new Submission("https://www.udemy.com/",60,assignment3,student5,course1);
+            Submission submission18 = new Submission("https://www.coursera.org/",50,assignment3,student6,course1);
+
             submissionService.saveSubmission(submission1);
             submissionService.saveSubmission(submission2);
             submissionService.saveSubmission(submission3);
             submissionService.saveSubmission(submission4);
             submissionService.saveSubmission(submission5);
             submissionService.saveSubmission(submission6);
+
+            submissionService.saveSubmission(submission7);
+            submissionService.saveSubmission(submission8);
+            submissionService.saveSubmission(submission9);
+            submissionService.saveSubmission(submission10);
+            submissionService.saveSubmission(submission11);
+            submissionService.saveSubmission(submission12);
+
+            submissionService.saveSubmission(submission13);
+            submissionService.saveSubmission(submission14);
+            submissionService.saveSubmission(submission15);
+            submissionService.saveSubmission(submission16);
+            submissionService.saveSubmission(submission17);
+            submissionService.saveSubmission(submission18);
 
 
         }

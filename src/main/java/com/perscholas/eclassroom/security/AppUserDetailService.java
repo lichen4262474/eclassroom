@@ -17,7 +17,6 @@ import java.util.List;
 @Slf4j
 public class AppUserDetailService implements UserDetailsService {
 
-
     TeacherRepoI teacherRepoI;
     StudentRepoI studentRepoI;
     AuthGroupRepoI authGroupRepoI;

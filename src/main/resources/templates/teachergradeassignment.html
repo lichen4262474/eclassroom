@@ -99,15 +99,14 @@
     <!-- content -->
     <div class="container">
       <!-- grade assignment-->
-      <h4 class="pt-2">Assignment Name</h4>
-      <p class="">
-        Post Date <span> 2013-08-03 </span> &nbsp &nbsp &nbsp<span>
+      <h4 class="pt-2" th:text = "${assignment.title}">Assignment Name</h4>
+      <p>
+        Post Date <span th:text = "${assignment.postDateTime}"> 2013-08-03 </span> &nbsp &nbsp &nbsp<span th:text = "${assignment.dueDate}">
           Due Date 2013 09-02</span
         >  
       </p>
 
       <table class="table table-hover">
-        <form id="gradeAssignment">
         <tr>
           <th>ID</th>
           <th>Student Name</th>
@@ -115,19 +114,23 @@
           <th>Submission Time</th>
           <th>Grade</th>
         </tr>
-        <tr>
-          <td>1</td>
-          <td>Li Chen</td>
-          <td><a href="#">Submission</a></td>
-          <td>2013-08-23 08:45 AM</td>
-          <td><input class= " form-control"type="text"> </input></td>
+        <!-- th:id="'submission'+${submission.id}" -->
+        <form 
+        id="form"
+        method="post"
+        th:action ="@{/teacher/course/{courseId}/gradeAssignment/{assignmentId}/grade(courseId=${courseId}, assignmentId = ${assignmentId})}"
+        >
+        <tr th:each="submission: ${submissions}">
+          <td th:text="${submission.student.id}">1</td>
+          <td th:text="${submission.student.name}">Li Chen</td>
+          <td><a th:href="${submission.submissionLink}">Submission</a></td>
+          <td th:text="${submission.submissionTime}">2013-08-23 08:45 AM</td>
+          <td><input class= "form-control" type="number" th:name ="gradesArray" th:placeholder="${submission.grade}" th:value="${submission.grade}" required min="0" max="100"> </input></td>
         </tr>
-     
       </form>
       </table>
-      <button type="submit" class="btn btn-primary " form ="gradeAssignment">Save</button>
-    </div>
-
+      <button type="submit" class="btn btn-primary" form="form">Save</button>
     
+    </div>
   </body>
 </html>

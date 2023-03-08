@@ -3,6 +3,7 @@ package com.perscholas.eclassroom.controller;
 import com.perscholas.eclassroom.models.*;
 import com.perscholas.eclassroom.repo.AnnouncementRepoI;
 import com.perscholas.eclassroom.repo.AssignmentRepoI;
+import com.perscholas.eclassroom.repo.AuthGroupRepoI;
 import com.perscholas.eclassroom.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -25,6 +28,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequestMapping("/teacher")
 public class TeacherController {
+    private final AuthGroupRepoI authGroupRepoI;
     private final AssignmentRepoI assignmentRepoI;
     private final AnnouncementRepoI announcementRepoI;
     AnnouncementService announcementService;
@@ -44,7 +48,8 @@ public class TeacherController {
     SubmissionService submissionService,
     TeacherService teacherService,
                              AnnouncementRepoI announcementRepoI,
-                             AssignmentRepoI assignmentRepoI){
+                             AssignmentRepoI assignmentRepoI,
+                             AuthGroupRepoI authGroupRepoI){
         this.announcementService = announcementService;
         this.assignmentService = assignmentService;
         this.courseService = courseService;
@@ -54,15 +59,21 @@ public class TeacherController {
         this.teacherService = teacherService;
         this.announcementRepoI = announcementRepoI;
         this.assignmentRepoI = assignmentRepoI;
+        this.authGroupRepoI = authGroupRepoI;
     }
 
 
-
+//teacher data manipulation
     @PostMapping("/addTeacher")
-    public String saveTeacher(@ModelAttribute("teacher") Teacher teacher, Course course){
-        log.warn("add teacher: "+ teacher);
+    public String saveTeacher(@RequestParam String name,@RequestParam String email,@RequestParam String password){
+        Teacher teacher = new Teacher(name,email,password);
         teacherService.saveTeacher(teacher);
-        return "teacherhome";
+        log.warn("Create teacher "+ teacher.getName());
+        AuthGroup auth = new AuthGroup(teacher.getEmail(),"teacher");
+        log.warn("create auth + "+ teacher.getName());
+        authGroupRepoI.save(auth);
+//        RedirectView redirectView = new RedirectView("index");
+        return "index";
     }
 
     @GetMapping("/getTeacher")
@@ -87,6 +98,8 @@ public class TeacherController {
         RedirectView redirectView = new RedirectView("/teacherhome");
         return redirectView;
     }
+
+//    course data manipulation
     @PostMapping("/addCourse")
     public RedirectView teacherAddCourse(@ModelAttribute Course addCourse, Principal principal){
         Teacher teacher = teacherService.findTeacherByEmail(principal.getName());
@@ -125,6 +138,8 @@ public class TeacherController {
         model.addAttribute("course",new Course());
         return "teacherclasshome";
    }
+
+//   announcement data manipulation
    @GetMapping("/course/{courseId}/announcement")
     public String getAnnouncements(@PathVariable("courseId") Integer id,Model model){
         Course course =courseService.getCourseByID(id);
@@ -167,6 +182,7 @@ public class TeacherController {
         return "teacherannouncement";
     }
 
+//    lesson data manipulation
     @GetMapping("/course/{courseId}/lesson")
     public String getLessons(@PathVariable("courseId") Integer id, Model model) {
         List<Lesson> lessons = lessonService.getAllLessonByCourse(id);
@@ -210,6 +226,7 @@ public class TeacherController {
         return "teacherlesson";
     }
 
+//    assignment data manipulation
     @GetMapping("/course/{courseId}/assignment")
     public String getAssignments(@PathVariable("courseId") Integer id, Model model){
         Course course =courseService.getCourseByID(id);
@@ -252,7 +269,29 @@ public class TeacherController {
         return "teacherassignment";
     }
 
+    @GetMapping("/course/{courseId}/gradeAssignment/{assignmentId}")
+    public String getSubmissions( @RequestParam(value = "gradesArray", required = false) Integer[] gradesArray,@PathVariable("courseId") Integer courseId,@PathVariable("assignmentId") Integer assignmentId,Model model){
+        Assignment assignment = assignmentService.getAssignment(assignmentId);
+        List<Submission> submissions = assignment.getSubmissionList();
+        model.addAttribute("submissions",submissions);
+        model.addAttribute("assignment",assignment);
+        log.warn("Get submissions for assignment " + assignment.getId() );
+        return "teachergradeassignment";
+    }
 
+    @GetMapping("/teachergradeassignment")
+    public String showSubmissions(){
+        return "teachergradeassignment";
+    }
+    @PostMapping("/course/{courseId}/gradeAssignment/{assignmentId}/grade")
+    public RedirectView gradeAssignment(@RequestParam(value = "gradesArray", required = true) Integer[] gradesArray,@PathVariable("courseId") Integer courseId,@PathVariable("assignmentId") Integer assignmentId){
+        Assignment assignment = assignmentService.getAssignment(assignmentId);
+        submissionService.updateAllGradeForAsgmt(assignment, List.of(gradesArray));
+        RedirectView redirectView = new RedirectView("/teacher/course/{courseId}/gradeAssignment/{assignmentId}");
+        return redirectView;
+    }
+
+//student data manipulation
     @GetMapping("/course/{courseId}/student")
     public String getStudents(@PathVariable("courseId") Integer id,Model model){
         Course course =courseService.getCourseByID(id);
@@ -260,11 +299,35 @@ public class TeacherController {
         model.addAttribute("students",students);
         return "teacherstudent";
     }
-
+    @GetMapping("course/{courseId}/student/unenroll/{studentId}")
+    public RedirectView unenrollStudent(@PathVariable("courseId") Integer courseId,@PathVariable("studentId") Integer studentId){
+        Student student = studentService.getStudent(studentId);
+        Course course = courseService.getCourseByID(courseId);
+        student.deleteCourse(course);
+        studentService.saveStudent(student);
+        log.warn("unenroll student" + student.getName());
+        RedirectView redirectView = new RedirectView("/teacher/course/{courseId}/student");
+        return redirectView;
+    }
 
     @GetMapping("/teacherstudent")
     public String showStudents(){
         return "teacherstudent";
     }
 
+    //gradebook access
+    @GetMapping("/teachergradebook")
+    public String showGradebook(){
+        return "teachergradebook";
+    }
+
+    @GetMapping("/course/{courseId}/gradebook")
+    public String getAllGrades(@PathVariable("courseId") Integer courseId,Model model){
+        List<Student> studentList = courseService.getCourseByID(courseId).getStudentList();
+        List<Assignment> assignmentList = courseService.getCourseByID(courseId).getAssignmentList();
+        model.addAttribute("studentList",studentList);
+        model.addAttribute("assignmentList",assignmentList);
+        return"teachergradebook";
+
+    }
 }

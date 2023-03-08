@@ -35,7 +35,6 @@
                   name="#"
                   id="register-form"
                   th:action="@{/teacher/addTeacher}"
-                  th:object="${teacher}"
                   method="post"
                 >
                   <div class="d-flex row align-items-center mb-4">
@@ -51,8 +50,7 @@
                         class="form-control"
                         placeholder="John Doe"
                         required
-                        pattern="^([A-Z][a-z]*)(\s[A-Z][a-z]*){1,}$"
-                        th:field="*{name}"
+                        th:text="${name}"
                       />
                     </div>
                   </div>
@@ -60,19 +58,19 @@
                   <div class="d-flex row align-items-center mb-4">
                     <div class="col-4">
                       <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                      <label class="form-label m-2" for="your-email"
+                      <label class="form-label m-2" for="email"
                         >Your Email</label
                       >
                     </div>
                     <div class="col">
                       <input
                         type="email"
-                        id="your-email"
-                        name="your-email"
+                        id="email"
+                        name="email"
                         class="form-control"
                         placeholder="johndoe@gmail.com"
                         required
-                        th:field="*{email}"
+                        th:text="${email}"
                       />
                     </div>
                   </div>
@@ -80,20 +78,21 @@
                   <div class="d-flex row align-items-center mb-4">
                     <div class="col-4">
                       <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                      <label class="form-label m-2" for="your-password"
+                      <label class="form-label m-2" for="password"
                         >Password</label
                       >
                     </div>
                     <div class="col">
                       <input
                         type="password"
-                        id="your-password"
-                        name="your-password"
+                        id="password"
+                        name="password"
                         class="form-control"
-                        placeholder="Minimum 6 digits"
+                        placeholder="6-10 digits"
                         required
                         minlength="6"
-                        th:field="*{password}"
+                        maxlength="10"
+                        th:text="${password}"
                       />
                     </div>
                   </div>
@@ -136,7 +135,7 @@
                       type="submit"
                       class="btn btn-primary btn-lg"
                       id="register"
-                      name="register"
+                      form="register-form"
                       disabled
                     >
                       Register
@@ -156,7 +155,7 @@
       };
 
       var repeatPasswordCheck = function () {
-        var password = document.getElementById("your-password");
+        var password = document.getElementById("password");
         var repeatPassword = document.getElementById("repeat-password");
         if (password.value != repeatPassword.value) {
           repeatPassword.setCustomValidity("different password");

@@ -1,8 +1,10 @@
 package com.perscholas.eclassroom.controller;
 
+import com.perscholas.eclassroom.models.AuthGroup;
 import com.perscholas.eclassroom.models.Course;
 import com.perscholas.eclassroom.models.Student;
 import com.perscholas.eclassroom.models.Teacher;
+import com.perscholas.eclassroom.repo.AuthGroupRepoI;
 import com.perscholas.eclassroom.repo.CourseRepoI;
 import com.perscholas.eclassroom.service.*;
 import lombok.AccessLevel;
@@ -22,7 +24,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequestMapping("/student")
 public class StudentController {
-    private final CourseRepoI courseRepoI;
+    AuthGroupRepoI authGroupRepoI;
     AnnouncementService announcementService;
     AssignmentService assignmentService;
     CourseService courseService;
@@ -30,16 +32,9 @@ public class StudentController {
     StudentService studentService;
     SubmissionService submissionService;
     TeacherService teacherService;
-
     @Autowired
-    public StudentController(AnnouncementService announcementService,
-                             AssignmentService assignmentService,
-                             CourseService courseService,
-                             LessonService lessonService,
-                             StudentService studentService,
-                             SubmissionService submissionService,
-                             TeacherService teacherService,
-                             CourseRepoI courseRepoI){
+    public StudentController(AuthGroupRepoI authGroupRepoI, AnnouncementService announcementService, AssignmentService assignmentService, CourseService courseService, LessonService lessonService, StudentService studentService, SubmissionService submissionService, TeacherService teacherService) {
+        this.authGroupRepoI = authGroupRepoI;
         this.announcementService = announcementService;
         this.assignmentService = assignmentService;
         this.courseService = courseService;
@@ -47,7 +42,29 @@ public class StudentController {
         this.studentService = studentService;
         this.submissionService = submissionService;
         this.teacherService = teacherService;
-        this.courseRepoI = courseRepoI;
+    }
+
+
+//student data manipulation
+    @PostMapping("/addStudent")
+    public String saveStudent(@RequestParam String name,@RequestParam String email,@RequestParam String guardianName,@RequestParam String guardianEmail,@RequestParam String password){
+        Student student = new Student(name,email,guardianName, guardianEmail,password);
+        studentService.saveStudent(student);
+        log.warn("Create student "+ student.getName());
+        AuthGroup auth = new AuthGroup(student.getEmail(),"student");
+        log.warn("create auth + "+ student.getName());
+        authGroupRepoI.save(auth);
+//        RedirectView redirectView = new RedirectView("index");
+        return "index";
+    }
+    @PostMapping("/updateStudent")
+    public RedirectView updateStudent(Principal principal,@RequestParam(value = "newName", required = true)String newName,@RequestParam(value = "newPassword", required = true)String newPassword,@RequestParam(value = "newGuardianName", required = true)String newGuardianName,@RequestParam(value = "newGuardianEmail", required = true)String newGuardianEmail){
+        Student student = studentService.findStudentByEmail(principal.getName());
+
+        log.warn("update student: " + student.getName());
+        studentService.updateStudent(newName,newPassword,newGuardianName,newGuardianEmail,student.getId());
+        RedirectView redirectView = new RedirectView("/studenthome");
+        return redirectView;
     }
 
     @ModelAttribute
@@ -75,14 +92,6 @@ public class StudentController {
         return redirectView;
     }
 
-    @PostMapping("/updateStudent")
-    public RedirectView updateStudent(Principal principal,@RequestParam(value = "newName", required = true)String newName,@RequestParam(value = "newPassword", required = true)String newPassword,@RequestParam(value = "newGuardianName", required = true)String newGuardianName,@RequestParam(value = "newGuardianEmail", required = true)String newGuardianEmail){
-        Student student = studentService.findStudentByEmail(principal.getName());
 
-        log.warn("update student: " + student.getName());
-        studentService.updateStudent(newName,newPassword,newGuardianName,newGuardianEmail,student.getId());
-        RedirectView redirectView = new RedirectView("/studenthome");
-        return redirectView;
-    }
 
 }

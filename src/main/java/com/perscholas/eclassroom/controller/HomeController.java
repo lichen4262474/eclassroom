@@ -62,6 +62,24 @@ public class HomeController {
         this.authGroupRepoI = authGroupRepoI;
     }
 
+    @GetMapping("/index")
+    public String showLogin(@RequestParam(value = "error", required = false) String error){
+        return "index";
+    }
+
+    @GetMapping("/teacherregister")
+    public String show(@RequestParam(value = "name", required = false) String name,@RequestParam(value = "email", required = false) String email,@RequestParam(value = "password", required = false) String password)
+    {
+        return "teacherregister";
+    }
+
+    @GetMapping("/studentregister")
+    public String show(@RequestParam(value = "name", required = false) String name,@RequestParam(value = "email", required = false) String email,@RequestParam(value = "guardianName", required = false) String guardianName,@RequestParam(value = "guardianEmail", required = false) String guardianEmail,@RequestParam(value = "password", required = false) String password)
+    {
+        return "studentregister";
+    }
+
+
     @GetMapping("/teacherhome")
     public  String teacherHome(@RequestParam(value = "id", required = false)Integer id,@ModelAttribute Course course, Principal principal, Model model,@RequestParam(value = "newName", required = false)String newName,@RequestParam(value = "newPassword", required = false)String newPassword)
     {
@@ -87,17 +105,7 @@ public class HomeController {
         return "studenthome";
     }
 
-    @GetMapping("/teacherregister")
-    public String show(Teacher teacher)
-    {
-        return "teacherregister";
-    }
 
-    @GetMapping("/studentregister")
-    public String show(Student student)
-    {
-        return "studentregister";
-    }
 
     @GetMapping("/home")
         public RedirectView showHomePage(@RequestParam(value = "error", required = false) String error,ModelMap model, Principal principal) {
@@ -118,9 +126,6 @@ public class HomeController {
 
 
 
-    @GetMapping("/index")
-    public String showLogin(@RequestParam(value = "error", required = false) String error){
-        return "index";
-    }
+
 
 }

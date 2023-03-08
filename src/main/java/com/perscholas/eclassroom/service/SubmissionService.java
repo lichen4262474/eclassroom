@@ -82,6 +82,8 @@ public class SubmissionService {
         for (int i = 0; i < submissionList.size(); i++) {
             submissionList.get(i).setGrade(grades.get(i));
         }
+        asgmt.setSubmissionList(submissionList);
+        assignmentRepoI.save(asgmt);
     }
 
     public void updateAllGradeForStudent(Student student, List<Integer> grades) {
