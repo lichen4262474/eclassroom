@@ -20,4 +20,6 @@ public interface StudentRepoI extends JpaRepository<Student,Integer> {
     Student findByEmail(String email);
     @Query(value="select count(*) from Student student where student.email = ?1",nativeQuery = true)
     Integer existByEmail(String email);
+
+    Student getStudentByEmail(String email);
 }

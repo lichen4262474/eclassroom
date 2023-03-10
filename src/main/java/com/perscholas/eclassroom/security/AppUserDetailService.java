@@ -35,9 +35,9 @@ public class AppUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         List<AuthGroup> authGroupList = authGroupRepoI.findByEmail(email);
         log.warn("authgroup looking for email start");
-        if (studentRepoI.existByEmail(email)>0){
+        if (studentRepoI.findByEmail(email)!=null){
             return new AppUserPrincipal(studentRepoI.findByEmail(email), authGroupList);
-        }else if (teacherRepoI.existByEmail(email)>0){
+        }else if (teacherRepoI.findByEmail(email)!=null){
         return new AppUserPrincipal(teacherRepoI.findByEmail(email), authGroupList);}
         throw new UsernameNotFoundException("user name not found");
     }

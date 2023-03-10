@@ -33,12 +33,6 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
         <!-- setting  trigger modal -->
-        <i
-          class="fa-solid fa-gear"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal3"
-          >&nbsp &nbsp</i
-        >
         <a class="navbar-brand" th:href="@{/teacherhome}">Teacher Home</a>
         <button
           class="navbar-toggler"
@@ -107,41 +101,41 @@
       <main>
         <div class="container-fluid px-4">
           <h1 class="mt-4" th:text="${course.name}">Charts</h1>
-          <div class="card mb-4">
-            <div class="card-body">
-              Chart.js is a third party plugin that is used to generate the
-              charts in this template. The charts below have been customized -
-              for further customization options, please visit the official
-            </div>
-          </div>
-          <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-chart-area me-1"></i>
-              Average Grade Trend for the latest 10 assignment
-            </div>
-            <div class="card-body">
-              <canvas id="myAreaChart" width="100%" height="30"></canvas>
-            </div>
-            <div class="card-footer small text-muted">
-              Updated yesterday at 11:59 PM
-            </div>
-          </div>
           <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-6 card-group">
               <div class="card mb-4">
                 <div class="card-header">
                   <i class="fas fa-chart-bar me-1"></i>
-                  Student Average
+                  Course Summary
                 </div>
                 <div class="card-body">
-                  <canvas id="myBarChart" width="100%" height="50"></canvas>
+                  <ur>
+                    <li>
+                      You have
+                      <span style="color: red" th:text="${studentEnrolled}"
+                        >10</span
+                      >
+                      students enrolled in this course.
+                    </li>
+                    <li>
+                      Current class grade average is
+                      <span style="color: red" th:text="${courseAverage}"
+                        >60</span
+                      >
+                      points.
+                    </li>
+                    <li>
+                      Current failing students are
+                      <span style="color: red" th:text="${failingNames}"
+                        >Jafer, Amrutha, Tyron</span
+                      >
+                    </li>
+                  </ur>
                 </div>
-                <div class="card-footer small text-muted">
-                  Updated yesterday at 11:59 PM
-                </div>
+                <div class="card-footer small text-muted"></div>
               </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6 card-group">
               <div class="card mb-4">
                 <div class="card-header">
                   <i class="fas fa-chart-pie me-1"></i>
@@ -150,17 +144,193 @@
                 <div class="card-body">
                   <canvas id="myPieChart" width="100%" height="50"></canvas>
                 </div>
-                <div class="card-footer small text-muted">
-                  Updated yesterday at 11:59 PM
-                </div>
+                <div class="card-footer small text-muted"></div>
               </div>
             </div>
+          </div>
+          <div class="card mb-4">
+            <div class="card-header">
+              <i class="fas fa-chart-area me-1"></i>
+              Average Grade Trend for assignments
+            </div>
+            <div class="card-body">
+              <canvas id="myAreaChart" width="100%" height="30"></canvas>
+            </div>
+            <div class="card-footer small text-muted"></div>
+          </div>
+          <div class="card mb-4">
+            <div class="card-header">
+              <i class="fas fa-chart-area me-1"></i>
+              Average Grade for each student
+            </div>
+            <div class="card-body">
+              <canvas id="myBarChart" width="100%" height="50"></canvas>
+            </div>
+            <div class="card-footer small text-muted"></div>
           </div>
         </div>
       </main>
     </div>
-    <script src="/js/chart-area-demo.js"></script>
-    <script src="/js/chart-bar-demo.js"></script>
-    <script src="/js/chart-pie-demo.js"></script>
+    <!-- pie chart script -->
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+
+      Chart.defaults.global.defaultFontFamily =
+        '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+      Chart.defaults.global.defaultFontColor = "#292b2c";
+
+      var dataArray = /*[[${courseGradeSummary}]]*/ "default";
+      console.log(dataArray);
+      var ctx = document.getElementById("myPieChart");
+      var myPieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: ["A", "B", "C", "D", "F"],
+          datasets: [
+            {
+              data: dataArray,
+              backgroundColor: [
+                "#007bff",
+                "#dc3545",
+                "#ffc107",
+                "#28a745",
+                "#A020F0",
+              ],
+            },
+          ],
+        },
+      });
+      /*]]>*/
+    </script>
+    <!-- bar chart script -->
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      // Set new default font family and font color to mimic Bootstrap's default styling
+      Chart.defaults.global.defaultFontFamily =
+        '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+      Chart.defaults.global.defaultFontColor = "#292b2c";
+
+      // Bar Chart
+      var studentNames = /*[[${studentNames}]]*/ "default";
+      var studentAverageGrades = /*[[${studentAverageGrades}]]*/ "default";
+      var ctx = document.getElementById("myBarChart");
+      var myLineChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: studentNames,
+          datasets: [
+            {
+              label: "Grades",
+              backgroundColor: "rgba(2,117,216,1)",
+              borderColor: "rgba(2,117,216,1)",
+              data: studentAverageGrades,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            xAxes: [
+              {
+                time: {
+                  unit: "Student",
+                },
+                gridLines: {
+                  display: false,
+                },
+                ticks: {
+                  maxTicksLimit: 6,
+                },
+              },
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  min: 0,
+                  max: 100,
+                  maxTicksLimit: 5,
+                },
+                gridLines: {
+                  display: true,
+                },
+              },
+            ],
+          },
+          legend: {
+            display: false,
+          },
+        },
+      });
+
+      /*]]>*/
+    </script>
+    <!-- area chart script -->
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      // Set new default font family and font color to mimic Bootstrap's default styling
+      Chart.defaults.global.defaultFontFamily =
+        '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+      Chart.defaults.global.defaultFontColor = "#292b2c";
+
+      // Area Chart
+      var assignmentNames = /*[[${assignmentNames}]]*/ "default";
+      var assignmentAvg = /*[[${assignmentAvg}]]*/ "default";
+      var ctx = document.getElementById("myAreaChart");
+      var myLineChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: assignmentNames,
+          datasets: [
+            {
+              label: "Average Grades Per Assignment",
+              lineTension: 0.3,
+              backgroundColor: "rgba(2,117,216,0.2)",
+              borderColor: "rgba(2,117,216,1)",
+              pointRadius: 5,
+              pointBackgroundColor: "rgba(2,117,216,1)",
+              pointBorderColor: "rgba(255,255,255,0.8)",
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: "rgba(2,117,216,1)",
+              pointHitRadius: 50,
+              pointBorderWidth: 2,
+              data: assignmentAvg,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            xAxes: [
+              {
+                time: {
+                  unit: "Assignment",
+                },
+                gridLines: {
+                  display: false,
+                },
+                ticks: {
+                  maxTicksLimit: 7,
+                },
+              },
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  min: 0,
+                  max: 100,
+                  maxTicksLimit: 5,
+                },
+                gridLines: {
+                  color: "rgba(0, 0, 0, .125)",
+                },
+              },
+            ],
+          },
+          legend: {
+            display: false,
+          },
+        },
+      });
+
+      /*]]>*/
+    </script>
   </body>
 </html>

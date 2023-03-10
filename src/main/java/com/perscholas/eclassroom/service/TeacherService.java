@@ -60,8 +60,5 @@ public class TeacherService {
         return teacherRepoI.findByEmail(email);
     }
 
-    public Integer teacherExistByEmail(String email){
-        return  teacherRepoI.existByEmail(email);
-    }
 
 }

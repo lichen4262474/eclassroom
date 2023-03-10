@@ -124,6 +124,7 @@
                 class="form-control"
                 aria-describedby="courseNameHelpBlock"
                 th:field="*{name}"
+                required
               />
 
               <label for="description" class="form-label"
@@ -135,15 +136,17 @@
                 class="form-control"
                 aria-describedby="courseNameHelpBlock"
                 th:field="*{description}"
+                required
               />
 
-              <label for="zoom" class="form-label">Zoom Link</label>
+              <label type ="url" for="zoom" class="form-label">Zoom Link</label>
               <input
                 type="text"
                 id="zoom"
                 class="form-control"
                 aria-describedby="courseNameHelpBlock"
                 th:field="*{zoom}"
+                required
               />
 
               <label for="schedule" class="form-label">Schedule</label>
@@ -153,6 +156,7 @@
                 class="form-control"
                 aria-describedby="courseNameHelpBlock"
                 th:field="*{schedule}"
+                required
               />
             </form>
           </div>
@@ -277,7 +281,7 @@
                 />
               </div>
               <div class="mb-3">
-                <label for="repassword" class="form-label">password</label>
+                <label for="repassword" class="form-label">New password</label>
                 <input
                   type="password"
                   class="form-control"
@@ -325,7 +329,7 @@
 
     <!-- class card -->
     <div class="container">
-      <div class="row">
+      <div class="row card-group">
         <div class="col-4 mt-3" th:each="course:${courseList}">
           <div class="card shadow" style="width: 18rem">
             <div class="card-body">

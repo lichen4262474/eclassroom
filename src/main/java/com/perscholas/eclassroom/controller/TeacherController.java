@@ -6,6 +6,7 @@ import com.perscholas.eclassroom.repo.AssignmentRepoI;
 import com.perscholas.eclassroom.repo.AuthGroupRepoI;
 import com.perscholas.eclassroom.service.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -67,13 +69,18 @@ public class TeacherController {
 
 //teacher data manipulation
     @PostMapping("/addTeacher")
-    public String saveTeacher(@RequestParam String name,@RequestParam String email,@RequestParam String password){
+    public String addTeacher(Model model,@RequestParam String name,@RequestParam String email,@RequestParam String password){
+        if(teacherService.findTeacherByEmail(email)==null && studentService.findStudentByEmail(email)==null){
         Teacher teacher = new Teacher(name,email,password);
         teacherService.saveTeacher(teacher);
         log.warn("Create teacher "+ teacher.getName());
         AuthGroup auth = new AuthGroup(teacher.getEmail(),"teacher");
         log.warn("create auth + "+ teacher.getName());
         authGroupRepoI.save(auth);
+        }else{
+           model.addAttribute("message","This email has been registered");
+           return "teacherregister";
+        }
         return "index";
     }
 
@@ -121,18 +128,6 @@ public class TeacherController {
         return redirectView;
     }
 
-
-    @GetMapping("/course/{courseId}")
-    public String goToCourse(@PathVariable("courseId") Integer id,Model model){
-        Course course = courseService.getCourseByID(id);
-        model.addAttribute("course",course);
-        return "teacherclasshome";
-    }
-   @GetMapping("/teacherclasshome")
-    public String showTeacherClassHome(Model model){
-        model.addAttribute("course",new Course());
-        return "teacherclasshome";
-   }
 
 //   announcement data manipulation
    @GetMapping("/course/{courseId}/announcement")
@@ -326,10 +321,38 @@ public class TeacherController {
             studentGradesMap.put(student, submissionService.getStudentGradesForCourse(student,course));
             log.warn( student.getName() + submissionService.getStudentGradesForCourse(student,course));
         }
-//        model.addAttribute("studentList",studentList);
         model.addAttribute("assignmentList",assignmentList);
         model.addAttribute("studentGradesMap",studentGradesMap);
         return"teachergradebook";
+    }
 
+    //dashboard
+
+    @GetMapping("/teacherclasshome")
+    public String showTeacherClassHome(Model model){
+        return "teacherclasshome";
+    }
+    @GetMapping("/course/{courseId}")
+    public String goToCourse(@PathVariable("courseId") Integer id,Model model){
+        Course course = courseService.getCourseByID(id);
+        Integer studentEnrolled = Math.toIntExact(course.getStudentList().stream().count());
+        Integer courseAverage = submissionService.getAverageForCourse(course);
+        String failingNames = String.join(",",submissionService.failingStudentNames(course));
+        int[] courseGradeSummary = submissionService.courseGradeSummary(course);
+        String[] studentNames = course.getStudentList().stream().map(s->s.getName()).toArray(String[]::new);
+        int[] studentAverageGrades = submissionService.studentAverageGrades(course);
+        String[] assignmentNames = course.getAssignmentList().stream().map(e->e.getTitle()).toArray(String[]::new);
+        int[] assignmentAvg = submissionService.averageGradesForAssignments(course);
+        model.addAttribute("courseGradeSummary",courseGradeSummary);
+        model.addAttribute("studentEnrolled",studentEnrolled);
+        model.addAttribute("failingNames",failingNames);
+        model.addAttribute("courseAverage",courseAverage);
+        model.addAttribute("course",course);
+        model.addAttribute("studentNames",studentNames);
+        model.addAttribute("studentAverageGrades",studentAverageGrades);
+        model.addAttribute("assignmentAvg",assignmentAvg);
+        model.addAttribute("assignmentNames",assignmentNames);
+
+        return "teacherclasshome";
     }
 }

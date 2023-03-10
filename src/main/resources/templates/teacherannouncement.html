@@ -29,13 +29,6 @@
     <!-- Responsive navbar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
-        <!-- setting  trigger modal -->
-        <i
-          class="fa-solid fa-gear"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal3"
-          >&nbsp &nbsp</i
-        >
         <a class="navbar-brand" th:href="@{/teacherhome}">Teacher Home</a>
         <button
           class="navbar-toggler"
@@ -101,7 +94,6 @@
     <div class="container">
       <!-- Announcement -->
       <!-- Make Announcement -->
-
       <div class="card row mx-lg-4 mt-3">
         <form
           class="m-1"
@@ -127,13 +119,14 @@
               th:field="*{content}"
               required
             ></textarea>
-            <label for="floatingTextarea2">Announcement Content</label>
+            <label for="floatingTextarea2" class="text-muted"
+              >Announcement Content</label
+            >
           </div>
           <button type="submit" class="btn btn-primary m-1">Submit</button>
         </form>
       </div>
       <!-- Past Announcment -->
-
       <div th:each="announcement:${announcements}">
         <!-- past announcement content -->
         <div class="card row mx-lg-4 mt-3">
@@ -190,7 +183,7 @@
                   th:action="@{/teacher/course/{courseId}/editAnnouncement/{announcementId}(announcementId=${announcement.id},courseId=${courseId})}"
                   th:object="${editAnnouncement}"
                 >
-                  <label for="title" class="form-label">title</label>
+                  <label for="title" class="form-label">Title</label>
                   <input
                     type="text"
                     id="title"
@@ -201,11 +194,9 @@
                     th:placeholder="${announcement.title}"
                   />
 
-                  <label for="content" class="form-label"
-                    >Content of announcement</label
-                  >
-                  <input
-                    type="textarea"
+                  <label for="content" class="form-label">Content</label>
+                  <textarea
+                    rows="4"
                     id="content"
                     class="form-control"
                     aria-describedby="courseNameHelpBlock"

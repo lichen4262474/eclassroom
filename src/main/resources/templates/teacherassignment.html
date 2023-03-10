@@ -29,13 +29,6 @@
     <!-- Responsive navbar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
-        <!-- setting  trigger modal -->
-        <i
-          class="fa-solid fa-gear"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal3"
-          >&nbsp &nbsp</i
-        >
         <a class="navbar-brand" th:href="@{/teacherhome}">Teacher Home</a>
         <button
           class="navbar-toggler"
@@ -121,11 +114,11 @@
               placeholder="Leave a comment here"
               id="floatingTextarea2"
               style="height: 100px"
-               th:field="*{content}"
-               name = "content"
+              th:field="*{content}"
+              name = "content"
               required
             ></textarea>
-          <label for="floatingTextarea2">Assignment Details</label>
+          <label for="floatingTextarea2" class="text-muted">Assignment Details</label>
           </div>
           <input
             type="text"
@@ -202,7 +195,7 @@
                   th:action="@{/teacher/course/{courseId}/editAssignment/{assignmentId}(assignmentId=${assignment.id},courseId=${courseId})}"
                   th:object="${editAssignment}"
                 >
-                  <label for="title" class="form-label">title</label>
+                  <label for="title" class="form-label">Title</label>
                   <input
                     type="text"
                     id="title"
@@ -214,10 +207,10 @@
                   />
 
                   <label for="content" class="form-label"
-                    >Content of announcement</label
+                    >Content</label
                   >
-                  <input
-                    type="textarea"
+                  <textarea
+                    rows="4"
                     id="content"
                     class="form-control"
                     aria-describedby="courseNameHelpBlock"
@@ -225,6 +218,30 @@
                     th:field="*{content}"
                     th:placeholder="${assignment.content}"
                   />
+                  <label for="resourceLink" class="form-label"
+                  >Resource</label
+                >
+                <input
+                  type="url"
+                  id="resourceLink"
+                  class="form-control"
+                  aria-describedby="courseNameHelpBlock"
+                  name="resourceLink"
+                  th:field="*{resourceLink}"
+                  th:placeholder="${assignment.resourceLink}"
+                />
+                <label for="dueDate" class="form-label"
+                >Due Date</label
+              >
+              <input
+                type="date"
+                id="dueDate"
+                class="form-control"
+                aria-describedby="courseNameHelpBlock"
+                name="dueDate"
+                th:field="*{dueDate}"
+                th:placeholder="${assignment.dueDate}"
+              />
                 </form>
               </div>
 

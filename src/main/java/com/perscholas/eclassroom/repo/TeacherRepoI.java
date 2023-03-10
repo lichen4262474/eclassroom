@@ -22,8 +22,6 @@ public interface TeacherRepoI  extends JpaRepository<Teacher,Integer> {
 
 
     Teacher findByEmail(String email);
-    @Query(value="select count(*) from Teacher teacher where teacher.email = ?1",nativeQuery = true)
-    Integer existByEmail(String email);
 
 
 }

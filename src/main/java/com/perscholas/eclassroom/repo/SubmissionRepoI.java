@@ -10,20 +10,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Repository
 public interface SubmissionRepoI extends JpaRepository<Submission,Integer> {
-    @Transactional
-    @Modifying
-    @Query(value="update Submission set submission.submissionLink = ?1 where submission.id = ?2",nativeQuery = true)
-    void setSubmissionInfoById(String submissionLink, Integer id);
+//    @Transactional
+//    @Modifying
+//    @Query(value="update Submission set submission.submissionLink = ?1 where submission.id = ?2",nativeQuery = true)
+//    void setSubmissionInfoById(String submissionLink, Integer id);
 
-    @Transactional
-    @Modifying
-    @Query(value="update Submission set submission.grade =?1 where submission.id =?2", nativeQuery = true)
-    void setSubmissionGradeById(Integer grade, Integer id);
+//    @Transactional
+//    @Modifying
+//    @Query(value="update Submission set submission.grade =?1 where submission.id =?2", nativeQuery = true)
+//    void setSubmissionGradeById(Integer grade, Integer id);
 
     List<Submission> findByAssignment(Assignment asgmt);
 
@@ -33,4 +34,7 @@ public interface SubmissionRepoI extends JpaRepository<Submission,Integer> {
 
 
     Submission findByStudentAndAssignment(Student student, Assignment assignment);
+
+    List<Submission> findByStudentAndCourse(Student student, Course course);
+
 }

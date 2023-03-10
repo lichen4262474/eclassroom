@@ -72,6 +72,9 @@
                         required
                         th:text="${email}"
                       />
+                      <p class="text-warning" th:text="${message}">
+                        This Email has already been registered.
+                      </p>
                     </div>
                   </div>
                   <div class="d-flex row align-items-center mb-4">

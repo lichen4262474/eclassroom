@@ -27,6 +27,8 @@
       src="https://kit.fontawesome.com/345ebf7689.js"
       crossorigin="anonymous"
     ></script>
+    <!-- Chart Js -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
   </head>
   <body style="background-color: #eee">
     <!-- Responsive navbar-->
@@ -95,41 +97,70 @@
               ><span th:text="${course.teacher.name}">Teacher name</span></a
             >
           </p>
-          <div class="card mb-4">
-            <div class="card-body">
-              Chart.js is a third party plugin that is used to generate the
-              charts in this template. The charts below have been customized -
-              for further customization options, please visit the official
-            </div>
-          </div>
-          <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-chart-area me-1"></i>
-              Average Grade Trend for the latest 10 assignment
-            </div>
-            <div class="card-body">
-              <canvas id="myAreaChart" width="100%" height="30"></canvas>
-            </div>
-            <div class="card-footer small text-muted">
-              Updated yesterday at 11:59 PM
-            </div>
-          </div>
           <div class="row">
-            <div class="col-lg-6">
+            <!-- grades summary in text card -->
+            <div class="col-lg-6 card-group">
               <div class="card mb-4">
                 <div class="card-header">
-                  <i class="fas fa-chart-bar me-1"></i>
-                  Student Average
+                  <i class="fa-solid fa-chart-line"></i>
+                  Course Summary
                 </div>
                 <div class="card-body">
-                  <canvas id="myBarChart" width="100%" height="50"></canvas>
+                  <ur>
+                    <li>
+                      Your grade average for this course is:
+                      <span
+                        th:text="${studentGradeSummary[0]}"
+                        style="color: red"
+                      ></span>
+                      .
+                    </li>
+                    <li>
+                      Your highest grade for assignment is:
+                      <span
+                        th:text="${studentGradeSummary[1]}"
+                        style="color: red"
+                      ></span>
+                      .
+                    </li>
+                    <li>
+                      Your lowest grade for assignment is:
+                      <span
+                        th:text="${studentGradeSummary[2]}"
+                        style="color: red"
+                      ></span>
+                      .
+                    </li>
+                    <li>
+                      <span
+                        th:text="${studentGradeSummary[3]}"
+                        style="color: red"
+                      ></span>
+                      assignments have been assigned for this course.
+                    </li>
+                    <li>
+                      You have submitted
+                      <span
+                        th:text="${studentGradeSummary[4]}"
+                        style="color: red"
+                      ></span>
+                      assignments.
+                    </li>
+                    <li>
+                      You have
+                      <span
+                        th:text="${studentGradeSummary[5]}"
+                        style="color: red"
+                      ></span>
+                      missing assignments.
+                    </li>
+                  </ur>
                 </div>
-                <div class="card-footer small text-muted">
-                  Updated yesterday at 11:59 PM
-                </div>
+                <div class="card-footer small text-muted"></div>
               </div>
             </div>
-            <div class="col-lg-6">
+            <!-- Grade analysis pie chart -->
+            <div class="col-lg-6 card-group">
               <div class="card mb-4">
                 <div class="card-header">
                   <i class="fas fa-chart-pie me-1"></i>
@@ -138,17 +169,125 @@
                 <div class="card-body">
                   <canvas id="myPieChart" width="100%" height="50"></canvas>
                 </div>
-                <div class="card-footer small text-muted">
-                  Updated yesterday at 11:59 PM
-                </div>
+                <div class="card-footer small text-muted"></div>
               </div>
             </div>
+          </div>
+
+          <!-- grades trend graph card -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <i class="fas fa-chart-area me-1"></i>
+              Your Grade Trend in this Course
+            </div>
+            <div class="card-body">
+              <canvas id="myAreaChart" width="100%" height="30"></canvas>
+            </div>
+            <div class="card-footer small text-muted"></div>
           </div>
         </div>
       </main>
     </div>
-    <script src="/js/chart-area-demo.js"></script>
-    <script src="/js/chart-bar-demo.js"></script>
-    <script src="/js/chart-pie-demo.js"></script>
+    <!-- area chart script -->
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      // Set new default font family and font color to mimic Bootstrap's default styling
+      Chart.defaults.global.defaultFontFamily =
+        '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+      Chart.defaults.global.defaultFontColor = "#292b2c";
+
+      var assignmentsNames = /*[[${assignmentsNames}]]*/ "default";
+      var studentGrades = /*[[${studentGrades}]]*/ "default";
+      var ctx = document.getElementById("myAreaChart");
+      var myLineChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: assignmentsNames,
+          datasets: [
+            {
+              label: "Sessions",
+              lineTension: 0.3,
+              backgroundColor: "rgba(2,117,216,0.2)",
+              borderColor: "rgba(2,117,216,1)",
+              pointRadius: 5,
+              pointBackgroundColor: "rgba(2,117,216,1)",
+              pointBorderColor: "rgba(255,255,255,0.8)",
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: "rgba(2,117,216,1)",
+              pointHitRadius: 50,
+              pointBorderWidth: 2,
+              data: studentGrades,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            xAxes: [
+              {
+                time: {
+                  unit: "date",
+                },
+                gridLines: {
+                  display: false,
+                },
+                ticks: {
+                  maxTicksLimit: 7,
+                },
+              },
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  min: 0,
+                  max: 100,
+                  maxTicksLimit: 5,
+                },
+                gridLines: {
+                  color: "rgba(0, 0, 0, .125)",
+                },
+              },
+            ],
+          },
+          legend: {
+            display: false,
+          },
+        },
+      });
+
+      /*]]>*/
+    </script>
+    <!-- pie chart script -->
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+
+      Chart.defaults.global.defaultFontFamily =
+        '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+      Chart.defaults.global.defaultFontColor = "#292b2c";
+
+      var dataArray = /*[[${studentGradeAnalysis}]]*/ "default";
+      console.log(dataArray);
+      var ctx = document.getElementById("myPieChart");
+      var myPieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: ["A", "B", "C", "D", "F", "unsubmitted", "ungraded"],
+          datasets: [
+            {
+              data: dataArray,
+              backgroundColor: [
+                "#007bff",
+                "#dc3545",
+                "#ffc107",
+                "#28a745",
+                "#A020F0",
+                "#CC8899",
+                "#808080",
+              ],
+            },
+          ],
+        },
+      });
+      /*]]>*/
+    </script>
   </body>
 </html>

@@ -67,6 +67,10 @@ public class StudentService {
     public Student getStudent(Integer id) throws NoSuchElementException {
         return studentRepoI.findById(id).orElseThrow();
     }
+
+    public Student getStudentByEmail(String email) {
+        return studentRepoI.getStudentByEmail(email);
+    }
 //    public List<StudentDTO> getAllStudentsEssInfo() {
 //
 //        return studentRepoI

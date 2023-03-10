@@ -17,6 +17,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.lang.reflect.Array;
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -47,14 +48,18 @@ public class StudentController {
 
 //student data manipulation
     @PostMapping("/addStudent")
-    public String saveStudent(@RequestParam String name,@RequestParam String email,@RequestParam String guardianName,@RequestParam String guardianEmail,@RequestParam String password){
+    public String saveStudent(Model model,@RequestParam String name,@RequestParam String email,@RequestParam String guardianName,@RequestParam String guardianEmail,@RequestParam String password){
+        if(teacherService.findTeacherByEmail(email)==null && studentService.findStudentByEmail(email)==null){
         Student student = new Student(name,email,guardianName, guardianEmail,password);
         studentService.saveStudent(student);
         log.warn("Create student "+ student.getName());
         AuthGroup auth = new AuthGroup(student.getEmail(),"student");
         log.warn("create auth + "+ student.getName());
         authGroupRepoI.save(auth);
-//        RedirectView redirectView = new RedirectView("index");
+         }else{
+                model.addAttribute("message","This email has been registered");
+                return "studentregister";
+            }
         return "index";
     }
     @PostMapping("/updateStudent")
@@ -89,18 +94,7 @@ public class StudentController {
         return redirectView;
     }
 
-    @GetMapping("/course/{courseId}")
-    public String goToCourse(@PathVariable("courseId") Integer id,Model model){
-        Course course = courseService.getCourseByID(id);
-        model.addAttribute("course",course);
-        return "studentclasshome";
-    }
 
-    @GetMapping("/studentclasshome")
-    public String showTeacherClassHome(Model model){
-        model.addAttribute("course",new Course());
-        return "studentclasshome";
-    }
     //   announcement data manipulation
     @GetMapping("/course/{courseId}/announcement")
     public String getAnnouncements(@PathVariable("courseId") Integer id,Model model){
@@ -156,6 +150,32 @@ public class StudentController {
     @GetMapping("/studentassignment")
     public String showAssignments(Model model){
         return "studentassignment";
+    }
+
+    //Student Dashboard Data Manipulation
+    @GetMapping("/studentclasshome")
+    public String showStudentClassHome(Model model){
+        return "studentclasshome";
+    }
+
+    @GetMapping("/course/{courseId}")
+    public String showDashBoard(@PathVariable("courseId") Integer courseId,Principal principal,Model model){
+        Student student = studentService.getStudentByEmail(principal.getName());
+        Course course = courseService.getCourseByID(courseId);
+        List<Integer> studentGradeSummary = submissionService.studentGradeSummary(course,student);
+        log.warn("Getting student Grade Summary " + studentGradeSummary.toString());
+        int [] studentGradeAnalysis = submissionService.studentGradeAnalysis(course,student);
+        log.warn("getting student Grade analysis " + studentGradeAnalysis.toString());
+        String[] assignmentsNames = assignmentService.getAssignmentNamesForCourse(course);
+        log.warn("Getting assignment names" + assignmentsNames.toString());
+        int [] studentGrades = submissionService.getStudentGradesForCourse2(student,course);
+        log.warn("Getting students grades" + studentGrades.toString());
+        model.addAttribute("course",course);
+        model.addAttribute("studentGradeAnalysis",studentGradeAnalysis);
+        model.addAttribute("assignmentsNames",assignmentsNames);
+        model.addAttribute("studentGrades",studentGrades);
+        model.addAttribute("studentGradeSummary",studentGradeSummary);
+        return "studentclasshome";
     }
 
 }

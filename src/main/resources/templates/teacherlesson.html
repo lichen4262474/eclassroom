@@ -29,13 +29,6 @@
     <!-- Responsive navbar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container">
-        <!-- setting  trigger modal -->
-        <i
-          class="fa-solid fa-gear"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal3"
-          >&nbsp &nbsp</i
-        >
         <a class="navbar-brand" th:href="@{/teacherhome}">Teacher Home</a>
         <button
           class="navbar-toggler"
@@ -126,7 +119,9 @@
               th:field="*{content}"
               required
             ></textarea>
-            <label for="floatingTextarea2">Lesson Instruction</label>
+            <label for="floatingTextarea2" class="text-muted"
+              >Lesson Instruction</label
+            >
           </div>
           <input
             type="text"
@@ -205,11 +200,9 @@
                     th:placeholder="${lesson.title}"
                   />
 
-                  <label for="edit-content" class="form-label"
-                    >Content of announcement</label
-                  >
-                  <input
-                    type="textarea"
+                  <label for="edit-content" class="form-label">Content</label>
+                  <textarea
+                    rows="4"
                     id="edit-content"
                     class="form-control"
                     aria-describedby="courseNameHelpBlock"
@@ -218,10 +211,10 @@
                     th:placeholder="${lesson.content}"
                   />
                   <label for="edit-resource-link" class="form-label"
-                    >Content of announcement</label
+                    >Resource</label
                   >
                   <input
-                    type="text"
+                    type="url"
                     id="edit-resource-link"
                     class="form-control"
                     aria-describedby="courseNameHelpBlock"

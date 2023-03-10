@@ -2,6 +2,7 @@ package com.perscholas.eclassroom.service;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.perscholas.eclassroom.models.Announcement;
+import com.perscholas.eclassroom.models.Course;
 import com.perscholas.eclassroom.repo.*;
 import com.perscholas.eclassroom.models.Assignment;
 import lombok.AccessLevel;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -62,6 +64,12 @@ public class AssignmentService {
         return assignmentRepoI.findAll();
     }
 
+    public String[] getAssignmentNamesForCourse(Course course){
+        List<Assignment> assignmentList = course.getAssignmentList();
+        List<String> assignmentsNamesList = assignmentList.stream().map((assignment)->assignment.getTitle()).collect(Collectors.toList());
+        String[] assignmentsNamesArr = assignmentsNamesList.toArray(new String[0]);
+        return  assignmentsNamesArr;
+    }
 
 
 }

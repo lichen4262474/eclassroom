@@ -112,11 +112,11 @@ public class HomeController {
         String email = principal.getName(); //get logged in username/email
         RedirectView redirectView = new RedirectView("/teacherhome");
         log.warn("get principal email " + email);
-        if (studentService.studentExistByEmail(email) > 0) {
+        if (studentService.findStudentByEmail(email)!=null) {
             List<Course> courseList = studentService.findStudentByEmail(email).getCourseList();
             model.addAttribute("courseList",courseList);
             redirectView = new RedirectView("/studenthome");
-        } else if (teacherService.teacherExistByEmail(email) > 0) {
+        } else if (teacherService.findTeacherByEmail(email)!=null) {
             List<Course> courseList= teacherService.findTeacherByEmail(email).getCourseList();
             model.addAttribute("courseList",courseList);
         }

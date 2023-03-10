@@ -109,12 +109,15 @@
           </div>
           <a th:href="${assignment.key.resourceLink}">resource</a>
           <div class="text-end text-muted">
+            <span th:if="${assignment.value == -1}">
             <i
               class="fa-solid fa-arrow-up-from-bracket"
               data-bs-toggle="modal"
               th:attr="data-bs-target='#submit-assignment'+${assignment.key.id}"
               >&nbsp &nbsp
             </i>
+          </span>
+          <span th:unless="${assignment.value == -1}"></span>
           </div>
         </div>
         <!-- upload assignment modal -->
