@@ -1,5 +1,7 @@
 package com.perscholas.eclassroom.controller;
 
+import com.perscholas.eclassroom.exceptions.StudentRegisterException;
+import com.perscholas.eclassroom.exceptions.TeacherRegisterException;
 import com.perscholas.eclassroom.models.*;
 import com.perscholas.eclassroom.repo.AuthGroupRepoI;
 import com.perscholas.eclassroom.repo.CourseRepoI;
@@ -57,8 +59,8 @@ public class StudentController {
         log.warn("create auth + "+ student.getName());
         authGroupRepoI.save(auth);
          }else{
-                model.addAttribute("message","This email has been registered");
-                return "studentregister";
+           model.addAttribute("message","This email has already been registered!");
+           return "studentregister";
             }
         return "index";
     }
@@ -80,7 +82,6 @@ public class StudentController {
         Course course = courseService.getCourseByID(addCourseId);
         courseService.addCourseForStudent(course,student);
         log.warn("student" + student.getName() + " add Course" + course.getName());
-
         RedirectView redirectView = new RedirectView("/studenthome");
         return redirectView;
     }

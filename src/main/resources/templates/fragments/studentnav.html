@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
+    <!-- setting  trigger modal -->
+
+    <a class="navbar-brand" th:href="@{/studenthome}">Student Home</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            th:href="@{/student/course/{courseId}(courseId=${courseId})}"
+            >Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            th:href="@{/student/course/{courseId}/announcement(courseId=${courseId})}"
+            >Announcement</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            th:href="@{/student/course/{courseId}/lesson(courseId = ${courseId})}"
+            >Lesson</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            th:href="@{/student/course/{courseId}/assignment(courseId = ${courseId})}"
+            >Assignment</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

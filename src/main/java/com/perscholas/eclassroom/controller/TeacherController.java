@@ -1,5 +1,6 @@
 package com.perscholas.eclassroom.controller;
 
+import com.perscholas.eclassroom.exceptions.TeacherRegisterException;
 import com.perscholas.eclassroom.models.*;
 import com.perscholas.eclassroom.repo.AnnouncementRepoI;
 import com.perscholas.eclassroom.repo.AssignmentRepoI;
@@ -78,8 +79,8 @@ public class TeacherController {
         log.warn("create auth + "+ teacher.getName());
         authGroupRepoI.save(auth);
         }else{
-           model.addAttribute("message","This email has been registered");
-           return "teacherregister";
+            model.addAttribute("message","This email has already been registered!");
+            return "teacherregister";
         }
         return "index";
     }

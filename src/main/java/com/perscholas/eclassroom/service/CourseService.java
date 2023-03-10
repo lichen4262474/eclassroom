@@ -78,15 +78,6 @@ public class CourseService {
         studentRepoI.save(student);}
 
     }
-//    public List<CourseDTO> getAllCourseEssInfo() {
-//        return courseRepoI
-//                .findAll()
-//                .stream()
-//                .map((course) -> {
-//                    return new CourseDTO(course.getName(),course.getDescription(),course.getSchedule(),course.getZoom() );
-//                })
-//                .collect(Collectors.toList());
-//    }
 
     public List<Course> getAllCourse() {
 
