@@ -16,15 +16,6 @@ import java.util.NoSuchElementException;
 
 @Repository
 public interface SubmissionRepoI extends JpaRepository<Submission,Integer> {
-//    @Transactional
-//    @Modifying
-//    @Query(value="update Submission set submission.submissionLink = ?1 where submission.id = ?2",nativeQuery = true)
-//    void setSubmissionInfoById(String submissionLink, Integer id);
-
-//    @Transactional
-//    @Modifying
-//    @Query(value="update Submission set submission.grade =?1 where submission.id =?2", nativeQuery = true)
-//    void setSubmissionGradeById(Integer grade, Integer id);
 
     List<Submission> findByAssignment(Assignment asgmt);
 

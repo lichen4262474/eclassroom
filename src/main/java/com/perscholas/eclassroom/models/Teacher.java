@@ -1,17 +1,11 @@
 package com.perscholas.eclassroom.models;
 
-//
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,14 +29,21 @@ public class Teacher {
     String email;
     @NonNull
     String password;
-
-    @OneToMany(mappedBy = "teacher",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//
+    @OneToMany(mappedBy = "teacher",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     List<Course> courseList = new ArrayList<>();
 
     public Teacher(@NonNull String name, @NonNull String email, @NonNull String password) {
         this.name = name;
         this.email = email;
         this.password = new BCryptPasswordEncoder(4).encode(password);
+    }
+
+    public Teacher(Integer id, @NonNull String name, @NonNull String email, @NonNull String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     @Override

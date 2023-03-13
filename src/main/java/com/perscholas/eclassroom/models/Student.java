@@ -3,14 +3,10 @@ package com.perscholas.eclassroom.models;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,12 +37,12 @@ public class Student {
     @Email
     String guardianEmail;
 
-    @OneToMany(mappedBy = "student",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     List<Submission> submissionList = new ArrayList<>();
 
     @ToString.Exclude
     @JsonManagedReference
-    @ManyToMany (mappedBy = "studentList", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToMany (mappedBy = "studentList", fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     List<Course> courseList = new ArrayList<>();
 
     public Student(@NonNull String name, @NonNull String email, @NonNull String guardianName, @NonNull String guardianEmail, @NonNull String password) {
@@ -65,6 +61,8 @@ public class Student {
         this.guardianEmail = guardianEmail;
         this.courseList = courseList;
     }
+
+
 
     @Override
     public boolean equals(Object o) {
@@ -92,5 +90,5 @@ public class Student {
         this.submissionList.add(submission);
     }
 
-
+//
 }

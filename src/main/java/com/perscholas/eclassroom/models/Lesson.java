@@ -39,6 +39,13 @@ public class Lesson {
         this.resourceLink = resourceLink;
     }
 
+    public Lesson(Integer id, @NonNull String title, @NonNull String content,  @NonNull Course course) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.course = course;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

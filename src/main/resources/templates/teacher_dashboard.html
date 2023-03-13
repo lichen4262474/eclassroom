@@ -4,68 +4,7 @@
   </head>
   <body style="background-color: #eee">
     <!-- Responsive navbar-->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-      <div class="container">
-        <!-- setting  trigger modal -->
-        <a class="navbar-brand" th:href="@{/teacherhome}">Teacher Home</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                th:href="@{/teacher/course/{courseId}(courseId=${courseId})}"
-                >Dashboard
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                th:href="@{/teacher/course/{courseId}/announcement(courseId=${courseId})}"
-                >Announcement</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                th:href="@{/teacher/course/{courseId}/lesson(courseId = ${courseId})}"
-                >Lesson</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                th:href="@{/teacher/course/{courseId}/assignment(courseId = ${courseId})}"
-                >Assignment</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                th:href="@{/teacher/course/{courseId}/student(courseId = ${courseId})}"
-                >Student</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                th:href="@{/teacher/course/{courseId}/gradebook(courseId = ${courseId})}"
-                >Gradebook</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
+    <nav th:insert="~{fragments/teachernav.html}">
     </nav>
 
     <!-- content -->
@@ -74,7 +13,12 @@
 
       <main>
         <div class="container-fluid px-4">
-          <h1 class="mt-4" th:text="${course.name}">Charts</h1>
+          <div> <span  class="mt-4 h1" th:text="${course.name}"> Charts  </span>  
+           <span> <i class="fa-solid fa-gear"           
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"></i>
+          </span> 
+          </div>
           <div class="row">
             <div class="col-lg-6 card-group">
               <div class="card mb-4">
@@ -143,6 +87,91 @@
             <div class="card-footer small text-muted"></div>
           </div>
         </div>
+
+   <!-- edit a class Modal -->
+   <div
+   class="modal fade"
+   id="exampleModal"
+   tabindex="-1"
+   aria-labelledby="exampleModalLabel"
+   aria-hidden="true"
+ >
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title">Edit Class Info</h5>
+         <button
+           type="button"
+           class="btn-close"
+           data-bs-dismiss="modal"
+           aria-label="Close"
+         ></button>
+       </div>
+       <div class="modal-body">
+         <form
+           method="post"
+           id="editclass"
+           th:action="@{/teacher/editCourse/{courseId}(courseId = ${course.id})}"
+         >
+           <label for="courseName" class="form-label">Course Name</label>
+           <input
+             type="text"
+             id="courseName"
+             class="form-control"
+             aria-describedby="courseNameHelpBlock"
+             name = "name"
+             th:value = "${course.name}"
+           />
+
+           <label for="description" class="form-label"
+             >Course Description</label
+           >
+           <input
+             type="text"
+             id="description"
+             class="form-control"
+             aria-describedby="courseNameHelpBlock"
+             name = "description"
+             th:value = "${course.description}"
+           />
+
+           <label type ="url" for="zoom" class="form-label">Zoom Link</label>
+           <input
+             type="text"
+             id="zoom"
+             class="form-control"
+             aria-describedby="courseNameHelpBlock"
+             name = "zoom"
+             th:value = "${course.zoom}"
+           />
+
+           <label for="schedule" class="form-label">Schedule</label>
+           <input
+             type="text"
+             id="schedule"
+             class="form-control"
+             aria-describedby="courseNameHelpBlock"
+             name = "schedule"
+             th:value = "${course.schedule}"
+           />
+         </form>
+       </div>
+
+       <div class="modal-footer">
+         <button
+           type="button"
+           class="btn btn-secondary"
+           data-bs-dismiss="modal"
+         >
+           Close
+         </button>
+         <button type="submit" class="btn btn-primary" form="editclass">
+           Save changes
+         </button>
+       </div>
+     </div>
+   </div>
+ </div>
       </main>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

@@ -71,15 +71,6 @@ public class StudentService {
     public Student getStudentByEmail(String email) {
         return studentRepoI.getStudentByEmail(email);
     }
-//    public List<StudentDTO> getAllStudentsEssInfo() {
-//
-//        return studentRepoI
-//                .findAll()
-//                .stream()
-//                .map((oneStudent) -> {
-//                    return new StudentDTO(oneStudent.getId(), oneStudent.getName(), oneStudent.getEmail(), oneStudent.getGuardianName(), oneStudent.getGuardianName());
-//                })
-//                .collect(Collectors.toList());
-//    }
+
 
 }

@@ -1,32 +1,24 @@
 package com.perscholas.eclassroom.controller;
 
-import com.perscholas.eclassroom.exceptions.TeacherRegisterException;
+import com.perscholas.eclassroom.exceptions.InvalidInputException;
 import com.perscholas.eclassroom.models.*;
 import com.perscholas.eclassroom.repo.AnnouncementRepoI;
 import com.perscholas.eclassroom.repo.AssignmentRepoI;
 import com.perscholas.eclassroom.repo.AuthGroupRepoI;
 import com.perscholas.eclassroom.service.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.expression.spel.ast.Assign;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -139,7 +131,7 @@ public class TeacherController {
        model.addAttribute("announcements",announcements);
        model.addAttribute("newAnnouncement",newAnnouncement);
        model.addAttribute("editAnnouncement",new Announcement());
-        return "teacherannouncement";
+        return "teacher_announcement";
    }
 
    @PostMapping("/course/{courseId}/addAnnouncement")
@@ -170,7 +162,7 @@ public class TeacherController {
     }
     @GetMapping("/teacherannouncement")
     public String showAnnouncements(){
-        return "teacherannouncement";
+        return "teacher_announcement";
     }
 
 //    lesson data manipulation
@@ -184,7 +176,7 @@ public class TeacherController {
         model.addAttribute("lessons", lessons);
         model.addAttribute("editLesson", new Lesson());
         model.addAttribute("newLesson", newLesson);
-        return "teacherlesson";
+        return "teacher_lesson";
     }
 
     @PostMapping("/course/{courseId}/addLesson")
@@ -214,7 +206,7 @@ public class TeacherController {
     }
     @GetMapping("/teacherlesson")
     public String showLessons(){
-        return "teacherlesson";
+        return "teacher_lesson";
     }
 
 //    assignment data manipulation
@@ -226,7 +218,7 @@ public class TeacherController {
         model.addAttribute("assignments", assignments);
         model.addAttribute("newAssignment", newAssignment);
         model.addAttribute("editAssignment",new Assignment());
-        return "teacherassignment";
+        return "teacher_assignment";
     }
 
     @PostMapping("/course/{courseId}/addAssignment")
@@ -257,7 +249,7 @@ public class TeacherController {
 
     @GetMapping("/teacherassignment")
     public String showAssignments(){
-        return "teacherassignment";
+        return "teacher_assignment";
     }
 
     @GetMapping("/course/{courseId}/gradeAssignment/{assignmentId}")
@@ -267,7 +259,7 @@ public class TeacherController {
         model.addAttribute("submissions",submissions);
         model.addAttribute("assignment",assignment);
         log.warn("Get submissions for assignment " + assignment.getId() );
-        return "teachergradeassignment";
+        return "teacher_grade_assignment";
     }
 
     @GetMapping("/teachergradeassignment")
@@ -275,7 +267,7 @@ public class TeacherController {
         return "teachergradeassignment";
     }
     @PostMapping("/course/{courseId}/gradeAssignment/{assignmentId}/grade")
-    public RedirectView gradeAssignment(@RequestParam(value = "gradesArray", required = true) Integer[] gradesArray,@PathVariable("courseId") Integer courseId,@PathVariable("assignmentId") Integer assignmentId){
+    public RedirectView gradeAssignment(@RequestParam(value = "gradesArray", required = true) Integer[] gradesArray,@PathVariable("courseId") Integer courseId,@PathVariable("assignmentId") Integer assignmentId) throws InvalidInputException {
         Assignment assignment = assignmentService.getAssignment(assignmentId);
         submissionService.updateAllGradeForAsgmt(assignment, List.of(gradesArray));
         RedirectView redirectView = new RedirectView("/teacher/course/{courseId}/gradeAssignment/{assignmentId}");
@@ -288,7 +280,7 @@ public class TeacherController {
         Course course =courseService.getCourseByID(id);
         List<Student> students = course.getStudentList();
         model.addAttribute("students",students);
-        return "teacherstudent";
+        return "teacher_student";
     }
     @GetMapping("course/{courseId}/student/unenroll/{studentId}")
     public RedirectView unenrollStudent(@PathVariable("courseId") Integer courseId,@PathVariable("studentId") Integer studentId){
@@ -303,13 +295,13 @@ public class TeacherController {
 
     @GetMapping("/teacherstudent")
     public String showStudents(){
-        return "teacherstudent";
+        return "teacher_student";
     }
 
     //gradebook access
     @GetMapping("/teachergradebook")
     public String showGradebook(){
-        return "teachergradebook";
+        return "teacher_gradebook";
     }
 
     @GetMapping("/course/{courseId}/gradebook")
@@ -324,7 +316,7 @@ public class TeacherController {
         }
         model.addAttribute("assignmentList",assignmentList);
         model.addAttribute("studentGradesMap",studentGradesMap);
-        return"teachergradebook";
+        return"teacher_gradebook";
     }
 
     //dashboard
@@ -333,8 +325,9 @@ public class TeacherController {
     public String showTeacherClassHome(Model model){
         return "teacherclasshome";
     }
+
     @GetMapping("/course/{courseId}")
-    public String goToCourse(@PathVariable("courseId") Integer id,Model model){
+    public String goToCourse(@PathVariable("courseId") Integer id,Model model,@RequestParam(value = "name", required = false) String name, @RequestParam(value = "description", required = false) String description, @RequestParam(value = "zoom", required = false) String zoom,@RequestParam(value = "schedule", required = false) String schedule){
         Course course = courseService.getCourseByID(id);
         Integer studentEnrolled = Math.toIntExact(course.getStudentList().stream().count());
         Integer courseAverage = submissionService.getAverageForCourse(course);
@@ -353,7 +346,13 @@ public class TeacherController {
         model.addAttribute("studentAverageGrades",studentAverageGrades);
         model.addAttribute("assignmentAvg",assignmentAvg);
         model.addAttribute("assignmentNames",assignmentNames);
+        return "teacher_dashboard";
+    }
 
-        return "teacherclasshome";
+    @PostMapping("/editCourse/{courseId}")
+    public RedirectView editCourse(@PathVariable("courseId") Integer id, @RequestParam("name") String name,@RequestParam("description") String description,@RequestParam("zoom") String zoom, @RequestParam("schedule") String schedule ){
+        courseService.updateCourseInfo(name,description,zoom,schedule,id);
+        RedirectView redirectView = new RedirectView("/teacher/course/{courseId}");
+        return redirectView;
     }
 }

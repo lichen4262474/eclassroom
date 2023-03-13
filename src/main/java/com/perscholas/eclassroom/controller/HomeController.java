@@ -69,13 +69,13 @@ public class HomeController {
     @GetMapping("/teacherregister")
     public String show(@RequestParam(value = "name", required = false) String name,@RequestParam(value = "email", required = false) String email,@RequestParam(value = "password", required = false) String password)
     {
-        return "teacherregister";
+        return "teacher_register";
     }
 
     @GetMapping("/studentregister")
     public String show(@RequestParam(value = "name", required = false) String name,@RequestParam(value = "email", required = false) String email,@RequestParam(value = "guardianName", required = false) String guardianName,@RequestParam(value = "guardianEmail", required = false) String guardianEmail,@RequestParam(value = "password", required = false) String password)
     {
-        return "studentregister";
+        return "student_register";
     }
 
 
@@ -89,7 +89,7 @@ public class HomeController {
         model.addAttribute("teacher",teacher);
         model.addAttribute("courseList",courseList);
         model.addAttribute("addcourse", new Course());
-        return "teacherhome";
+        return "teacher_home";
     }
 
     @GetMapping("/studenthome")
@@ -101,7 +101,7 @@ public class HomeController {
         model.addAttribute("courseList",courseList);
         model.addAttribute("allCourseList",allCourseList);
         model.addAttribute("student",student);
-        return "studenthome";
+        return "student_home";
     }
 
 

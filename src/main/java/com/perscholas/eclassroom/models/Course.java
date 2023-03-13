@@ -42,18 +42,18 @@ public class Course {
     @JoinTable(name = "student_course",
             inverseJoinColumns  = @JoinColumn(name = "student_id", referencedColumnName = "id"),
             joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
-    @ManyToMany (fetch = FetchType.LAZY, cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToMany (fetch = FetchType.EAGER, cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     List<Student> studentList = new ArrayList<>();
-    @OneToMany(mappedBy = "course",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Exclude
     List<Announcement> anouncementList = new ArrayList<>();
-    @OneToMany (mappedBy = "course",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany (mappedBy = "course",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Exclude
     List<Lesson> lessonList;
-    @OneToMany(mappedBy = "course",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Exclude
     List<Assignment> assignmentList = new ArrayList<>();
-    @OneToMany(mappedBy = "course",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Exclude
     List<Submission> submissionList =new ArrayList<>();
 
@@ -73,6 +73,14 @@ public class Course {
         this.zoom = zoom;
         this.schedule = schedule;
         this.teacher = teacher;
+    }
+
+    public Course(Integer id, @NonNull String name, @NonNull String description, @NonNull String zoom, @NonNull String schedule) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.zoom = zoom;
+        this.schedule = schedule;
     }
 
     @Override

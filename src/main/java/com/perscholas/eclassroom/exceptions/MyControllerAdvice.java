@@ -21,27 +21,21 @@ public class MyControllerAdvice {
 //    }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public RedirectView exceptionHandle(NoSuchElementException ex) {
-        log.debug("There is no such element! Please check if your input value is correct!");
+    public RedirectView exceptionHandle1(NoSuchElementException ex) {
+        log.debug("There is no such element! ");
         ex.printStackTrace();
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("http://localhost:8080/index");
         return redirectView;
     }
-    @ExceptionHandler(StudentRegisterException.class)
-    public String studentRegisterExceptionHandle(Model model,StudentRegisterException ex){
-        log.debug("Student Registered Failed");
-        ex.printStackTrace();
-        model.addAttribute("message","This email has been registered!");
-        return "studentregister";
-    }
 
-    @ExceptionHandler(TeacherRegisterException.class)
-    public String teacherRegisterExceptionHandle(Model model, TeacherRegisterException ex){
-        log.debug("Teacher Registered Failed");
+    @ExceptionHandler(InvalidInputException.class)
+    public RedirectView exceptionHandel2(InvalidInputException ex){
+        log.debug("Input format is wrong!");
         ex.printStackTrace();
-        model.addAttribute("message","This email has been registered!");
-        return "teacherregister";
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://localhost:8080/index");
+        return redirectView;
     }
 
 

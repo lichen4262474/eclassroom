@@ -1,5 +1,6 @@
 package com.perscholas.eclassroom.service;
 
+import com.perscholas.eclassroom.exceptions.InvalidInputException;
 import com.perscholas.eclassroom.models.Assignment;
 import com.perscholas.eclassroom.models.Course;
 import com.perscholas.eclassroom.models.Student;
@@ -66,10 +67,15 @@ public class SubmissionService {
     }
 
 
-    public void updateAllGradeForAsgmt(Assignment asgmt, List<Integer> grades) {
+    public void updateAllGradeForAsgmt(Assignment asgmt, List<Integer> grades) throws InvalidInputException {
         List<Submission> submissionList = this.getAllSubmissionForAsgmt(asgmt);
         for (int i = 0; i < submissionList.size(); i++) {
-            submissionList.get(i).setGrade(grades.get(i));
+            if(grades.get(i) < 100 && grades.get(i) > 0) {
+                submissionList.get(i).setGrade(grades.get(i));
+            } else
+            {
+                throw new InvalidInputException("grade must between 0 and 100");
+            }
         }
         asgmt.setSubmissionList(submissionList);
         assignmentRepoI.save(asgmt);
@@ -174,25 +180,7 @@ public class SubmissionService {
         return gradeSummary;
     }
 
-//    public int[] asgmtGradeSummary(Assignment asgmt){
-//        List<Submission> submissionList = this.getAllSubmissionForAsgmt(asgmt);
-//        List<Integer> gradeList = submissionList.stream().map(submission -> submission.getGrade()).collect(Collectors.toList());
-//        int[] gradeSummary = {0,0,0,0,0};
-//        for (Integer grade:gradeList){
-//            if (grade >= 90){
-//                gradeSummary[0]++;
-//            }else if(grade >=80){
-//                gradeSummary[1]++;
-//            }else if(grade >=70){
-//                gradeSummary[2]++;
-//            }else if(grade>=60){
-//                gradeSummary[3]++;
-//            }else{
-//                gradeSummary[4]++;
-//            }
-//        }
-//        return gradeSummary;
-//    }
+
 
     public Integer getAverageForCourse(Course course) {
         List<Submission> submissionListRaw = submissionRepoI.findByCourse(course);

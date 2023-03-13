@@ -1,11 +1,9 @@
 package com.perscholas.eclassroom.models;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -13,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-//test
 @Entity
 @Slf4j
 @AllArgsConstructor
@@ -55,6 +52,15 @@ public class Assignment {
         this.content = content;
         this.resourceLink = resourceLink;
         this.dueDate = dueDate;
+    }
+
+    public Assignment(Integer id, @NonNull String title, @NonNull String content, String resourceLink, @NonNull LocalDate dueDate, @NonNull Course course) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.resourceLink = resourceLink;
+        this.dueDate = dueDate;
+        this.course = course;
     }
 
     @Override

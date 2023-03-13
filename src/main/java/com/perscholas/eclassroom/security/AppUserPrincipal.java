@@ -42,7 +42,6 @@ public class AppUserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
         return authGroup.stream().map((auth)->new SimpleGrantedAuthority(auth.getRole())).collect(Collectors.toList());
     }
 

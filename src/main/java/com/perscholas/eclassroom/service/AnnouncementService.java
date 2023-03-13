@@ -60,6 +60,6 @@ public class AnnouncementService {
     }
 
     public List<Announcement> getAllAnnouncement() {
-        return announcementRepoI.findAll(Sort.by("postDateTime").descending());
+        return announcementRepoI.findAll(Sort.by("id").descending());
     }
 }

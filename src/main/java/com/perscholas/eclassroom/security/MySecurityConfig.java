@@ -4,7 +4,6 @@ package com.perscholas.eclassroom.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -48,6 +47,8 @@ public class MySecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/","/index","/css/**", "/js/**", "/teacherregister","/studentregister", "/teacher/addTeacher", "/student/addStudent").permitAll()
+//                        .requestMatchers("/student/**", "/student/course/*").hasRole("student")
+//                        .requestMatchers("/teacher/**", "/teacher/course/*").hasRole("teacher")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
@@ -56,7 +57,6 @@ public class MySecurityConfig {
                         .passwordParameter("password")
                         .loginProcessingUrl("/login/processing")
                         .defaultSuccessUrl("/home", true)
-//                        .failureUrl("/index")
                         .permitAll()
                 )
                 .logout((logout) -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/")

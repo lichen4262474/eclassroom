@@ -1,10 +1,7 @@
 package com.perscholas.eclassroom.controller;
 
-import com.perscholas.eclassroom.exceptions.StudentRegisterException;
-import com.perscholas.eclassroom.exceptions.TeacherRegisterException;
 import com.perscholas.eclassroom.models.*;
 import com.perscholas.eclassroom.repo.AuthGroupRepoI;
-import com.perscholas.eclassroom.repo.CourseRepoI;
 import com.perscholas.eclassroom.service.*;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -13,13 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.lang.reflect.Array;
 import java.security.Principal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -102,7 +96,7 @@ public class StudentController {
         Course course =courseService.getCourseByID(id);
         List<Announcement> announcements = course.getAnouncementList();
         model.addAttribute("announcements",announcements);
-        return "studentannouncement";
+        return "student_announcement";
     }
 
     //    lesson data manipulation
@@ -113,7 +107,7 @@ public class StudentController {
             log.warn("getting lesson list" + lesson.getTitle());
         }
         model.addAttribute("lessons", lessons);
-        return "studentlesson";
+        return "student_lesson";
     }
 
     //    assignment data manipulation
@@ -133,7 +127,7 @@ public class StudentController {
         }
 
         model.addAttribute("assignmentWithSubmission", assignmentWithSubmission);
-        return "studentassignment";
+        return "student_assignment";
     }
 
     @PostMapping("/course/{courseId}/submitAssignment/{assignmentId}")
@@ -156,7 +150,7 @@ public class StudentController {
     //Student Dashboard Data Manipulation
     @GetMapping("/studentclasshome")
     public String showStudentClassHome(Model model){
-        return "studentclasshome";
+        return "student_dashboard";
     }
 
     @GetMapping("/course/{courseId}")
@@ -176,7 +170,7 @@ public class StudentController {
         model.addAttribute("assignmentsNames",assignmentsNames);
         model.addAttribute("studentGrades",studentGrades);
         model.addAttribute("studentGradeSummary",studentGradeSummary);
-        return "studentclasshome";
+        return "student_dashboard";
     }
 
 }
