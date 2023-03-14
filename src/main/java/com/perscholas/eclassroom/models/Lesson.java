@@ -28,7 +28,6 @@ public class Lesson {
     String content;
     LocalDateTime postDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
     @ManyToOne
-    @NonNull
     Course course;
     String resourceLink;
 

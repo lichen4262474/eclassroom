@@ -3,6 +3,7 @@ package com.perscholas.eclassroom.service;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.perscholas.eclassroom.models.Announcement;
 import com.perscholas.eclassroom.models.Course;
+import com.perscholas.eclassroom.models.Submission;
 import com.perscholas.eclassroom.repo.*;
 import com.perscholas.eclassroom.models.Assignment;
 import lombok.AccessLevel;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -51,8 +53,21 @@ public class AssignmentService {
         assignmentRepoI.save(assignment);
     }
 
-    public void deleteAssignment(Integer id){
-        assignmentRepoI.deleteById(id);
+    public void deleteAssignment(Course course, Assignment assignment){
+        assignment.setCourse(null);
+        assignmentRepoI.save(assignment);
+        course.deleteAssignment(assignment);
+        courseRepoI.save(course);
+        List<Submission> submissions = submissionRepoI.findByAssignment(assignment);
+        for(Submission submission:submissions){
+            submission.setAssignment(null);
+            submission.setCourse(null);
+            submission.setStudent(null);
+            submissionRepoI.save(submission);
+        }
+        submissionRepoI.deleteByAssignment(assignment);
+        assignmentRepoI.deleteById(assignment.getId());
+
     }
 
     public void updateAssignment(String title, String content, String resourceLink, LocalDateTime dueDateTime, Integer id){

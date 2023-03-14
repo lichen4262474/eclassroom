@@ -47,8 +47,12 @@ public class AnnouncementService {
         announcementRepoI.save(announcement);
     }
 
-    public void deleteAnnouncement(Integer id){
-        announcementRepoI.deleteById(id);
+    public void deleteAnnouncement(Course course, Announcement announcement){
+        course.deleteAnnouncement(announcement);
+        announcement.setCourse(null);
+        courseRepoI.save(course);
+        announcementRepoI.save(announcement);
+        announcementRepoI.deleteById(announcement.getId());
     }
 
     public void updateAnnouncement(String title, String content,Integer id){

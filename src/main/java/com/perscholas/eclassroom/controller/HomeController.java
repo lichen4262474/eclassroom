@@ -4,26 +4,20 @@ import com.perscholas.eclassroom.models.Course;
 import com.perscholas.eclassroom.models.Student;
 import com.perscholas.eclassroom.models.Teacher;
 import com.perscholas.eclassroom.repo.AuthGroupRepoI;
-import com.perscholas.eclassroom.repo.StudentRepoI;
-import com.perscholas.eclassroom.security.AppUserPrincipal;
 import com.perscholas.eclassroom.service.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -84,7 +78,10 @@ public class HomeController {
     {
         String email = principal.getName();
         Teacher teacher =teacherService.findTeacherByEmail(email);
-        List<Course> courseList = teacher.getCourseList();
+        List<Course> courseListRaw = teacher.getCourseList();
+        List<Course> courseList = courseListRaw.stream()
+                .sorted(Comparator.comparing(Course::getId).reversed())
+                .collect(Collectors.toList());
         log.warn("geting courseList");
         model.addAttribute("teacher",teacher);
         model.addAttribute("courseList",courseList);
@@ -95,7 +92,10 @@ public class HomeController {
     @GetMapping("/studenthome")
     public String studentHome(Principal principal, Model model,@RequestParam(value = "addCourseId", required = false)Integer addCourseId,@RequestParam(value = "deleteCourseId", required = false)Integer deleteCourseId,@RequestParam(value = "newName", required = false)String newName,@RequestParam(value = "newPassword", required = false)String newPassword,@RequestParam(value = "newGuardianName", required = false)String newGuardianName,@RequestParam(value = "newGuardianEmail", required = false)String newGuardianEmail) {
         String email = principal.getName();
-        List<Course> courseList = studentService.findStudentByEmail(email).getCourseList();
+        List<Course> courseListRaw = studentService.findStudentByEmail(email).getCourseList();
+        List<Course> courseList = courseListRaw.stream()
+                .sorted(Comparator.comparing(Course::getId).reversed())
+                .collect(Collectors.toList());
         List<Course> allCourseList = courseService.getAllCourse();
         Student student = studentService.findStudentByEmail(principal.getName());
         model.addAttribute("courseList",courseList);

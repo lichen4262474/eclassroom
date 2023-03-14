@@ -116,10 +116,13 @@ public class Course {
     public void addAnnouncement(Announcement announcement) {
         this.anouncementList.add(announcement);
     }
+    public void deleteAnnouncement(Announcement announcement){this.assignmentList.remove(announcement);}
     public void addLesson(Lesson lesson) {
         this.lessonList.add(lesson);
     }
+    public void  deleteLesson(Lesson lesson){this.lessonList.remove(lesson);}
     public void addAssignment(Assignment assignment) {
         this.assignmentList.add(assignment);
     }
+    public void deleteAssignment(Assignment assignment){this.assignmentList.remove(assignment);}
 }

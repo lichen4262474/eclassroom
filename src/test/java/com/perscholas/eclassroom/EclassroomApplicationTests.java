@@ -105,8 +105,8 @@ class EclassroomApplicationTests {
 	@Test
 	void getAllLessonByCourse(){
 		Course course = new Course("Social Studies","Junior Course","http://www.zoom.com","4:00-5:00PM");
-		Lesson lesson1 = new Lesson("Civil War","Read the article and answer questions",course);
-		Lesson lesson2 = new Lesson("WWI","Read article and answer questions",course);
+		Lesson lesson1 = new Lesson("Civil War","Read the article and answer questions",course,"http://www.zoom.com");
+		Lesson lesson2 = new Lesson("WWI","Read article and answer questions",course,"http://www.zoom.com");
 		courseService.saveCourse(course);
 		lessonService.saveLesson(lesson1);
 		lessonService.saveLesson(lesson2);

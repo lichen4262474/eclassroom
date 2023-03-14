@@ -47,8 +47,6 @@ public class MySecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/","/index","/css/**", "/js/**", "/teacherregister","/studentregister", "/teacher/addTeacher", "/student/addStudent").permitAll()
-//                        .requestMatchers("/student/**", "/student/course/*").hasRole("student")
-//                        .requestMatchers("/teacher/**", "/teacher/course/*").hasRole("teacher")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

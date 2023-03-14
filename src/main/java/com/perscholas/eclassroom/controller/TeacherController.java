@@ -5,6 +5,7 @@ import com.perscholas.eclassroom.models.*;
 import com.perscholas.eclassroom.repo.AnnouncementRepoI;
 import com.perscholas.eclassroom.repo.AssignmentRepoI;
 import com.perscholas.eclassroom.repo.AuthGroupRepoI;
+import com.perscholas.eclassroom.repo.CourseRepoI;
 import com.perscholas.eclassroom.service.*;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -16,15 +17,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequestMapping("/teacher")
 public class TeacherController {
+    private final CourseRepoI courseRepoI;
     private final AuthGroupRepoI authGroupRepoI;
     private final AssignmentRepoI assignmentRepoI;
     private final AnnouncementRepoI announcementRepoI;
@@ -46,7 +50,8 @@ public class TeacherController {
     TeacherService teacherService,
                              AnnouncementRepoI announcementRepoI,
                              AssignmentRepoI assignmentRepoI,
-                             AuthGroupRepoI authGroupRepoI){
+                             AuthGroupRepoI authGroupRepoI,
+                             CourseRepoI courseRepoI){
         this.announcementService = announcementService;
         this.assignmentService = assignmentService;
         this.courseService = courseService;
@@ -57,6 +62,7 @@ public class TeacherController {
         this.announcementRepoI = announcementRepoI;
         this.assignmentRepoI = assignmentRepoI;
         this.authGroupRepoI = authGroupRepoI;
+        this.courseRepoI = courseRepoI;
     }
 
 
@@ -72,7 +78,7 @@ public class TeacherController {
         authGroupRepoI.save(auth);
         }else{
             model.addAttribute("message","This email has already been registered!");
-            return "teacherregister";
+            return "teacher_register";
         }
         return "index";
     }
@@ -126,7 +132,10 @@ public class TeacherController {
    @GetMapping("/course/{courseId}/announcement")
     public String getAnnouncements(@PathVariable("courseId") Integer id,Model model){
         Course course =courseService.getCourseByID(id);
-       List<Announcement> announcements = course.getAnouncementList();
+       List<Announcement> announcementsRaw = course.getAnouncementList();
+       List<Announcement> announcements = announcementsRaw.stream()
+               .sorted(Comparator.comparing(Announcement::getId).reversed())
+               .collect(Collectors.toList());
        Announcement newAnnouncement = new Announcement();
        model.addAttribute("announcements",announcements);
        model.addAttribute("newAnnouncement",newAnnouncement);
@@ -145,7 +154,9 @@ public class TeacherController {
 
     @GetMapping("/course/{courseId}/deleteAnnouncement/{announcementId}")
     public RedirectView deleteAnnouncement(@PathVariable("announcementId") Integer announcementId,@PathVariable("courseId") Integer courseId)
-    { announcementService.deleteAnnouncement(announcementId);
+    {   Course course = courseService.getCourseByID(courseId);
+        Announcement announcement = announcementService.getAnnouncement(announcementId);
+        announcementService.deleteAnnouncement(course,announcement);
         log.warn("Announcement id " + announcementId +" has been deleted");
         RedirectView redirectView = new RedirectView("/teacher/course/{courseId}/announcement");
         return redirectView;
@@ -168,7 +179,10 @@ public class TeacherController {
 //    lesson data manipulation
     @GetMapping("/course/{courseId}/lesson")
     public String getLessons(@PathVariable("courseId") Integer id, Model model) {
-        List<Lesson> lessons = lessonService.getAllLessonByCourse(id);
+        List<Lesson> lessonsRaw = lessonService.getAllLessonByCourse(id);
+        List<Lesson> lessons = lessonsRaw.stream()
+                .sorted(Comparator.comparing(Lesson::getId).reversed())
+                .collect(Collectors.toList());
         Lesson newLesson = new Lesson();
         for(Lesson lesson: lessons) {
             log.warn("getting lesson list" + lesson.getTitle());
@@ -189,7 +203,9 @@ public class TeacherController {
     }
     @GetMapping("/course/{courseId}/deleteLesson/{lessonId}")
     public RedirectView deleteLesson(@PathVariable("lessonId") Integer lessonId,@PathVariable("courseId") Integer courseId)
-    { lessonService.deleteLesson(lessonId);
+    {   Course course = courseService.getCourseByID(courseId);
+        Lesson lesson = lessonService.getLesson(lessonId);
+        lessonService.deleteLesson(course,lesson);
         log.warn("Lesson " + lessonId +" has been deleted");
         RedirectView redirectView = new RedirectView("/teacher/course/{courseId}/lesson");
         return redirectView;
@@ -231,7 +247,9 @@ public class TeacherController {
     }
     @GetMapping("/course/{courseId}/deleteAssignment/{assignmentId}")
     public RedirectView deleteAssignment(@PathVariable("assignmentId") Integer assignmentId,@PathVariable("courseId") Integer courseId)
-    { assignmentService.deleteAssignment(assignmentId);
+    {   Course course = courseService.getCourseByID(courseId);
+        Assignment assignment = assignmentService.getAssignment(assignmentId);
+        assignmentService.deleteAssignment(course,assignment);
         log.warn("Assignment " + assignmentId +" has been deleted");
         RedirectView redirectView = new RedirectView("/teacher/course/{courseId}/assignment");
         return redirectView;
@@ -259,6 +277,7 @@ public class TeacherController {
         model.addAttribute("submissions",submissions);
         model.addAttribute("assignment",assignment);
         log.warn("Get submissions for assignment " + assignment.getId() );
+        RedirectView redirectView = new RedirectView("/course/{courseId}/assignment");
         return "teacher_grade_assignment";
     }
 

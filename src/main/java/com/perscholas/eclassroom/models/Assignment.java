@@ -36,7 +36,6 @@ public class Assignment {
     @OneToMany(mappedBy = "assignment",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     List<Submission> submissionList = new ArrayList<>();
     @ManyToOne
-    @NonNull
     Course course;
 
     public Assignment(@NonNull String title, @NonNull String content, String resourceLink, @NonNull LocalDate dueDate, @NonNull Course course) {

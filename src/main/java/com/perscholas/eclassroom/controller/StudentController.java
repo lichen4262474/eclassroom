@@ -1,5 +1,4 @@
 package com.perscholas.eclassroom.controller;
-
 import com.perscholas.eclassroom.models.*;
 import com.perscholas.eclassroom.repo.AuthGroupRepoI;
 import com.perscholas.eclassroom.service.*;
@@ -14,6 +13,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -54,7 +54,7 @@ public class StudentController {
         authGroupRepoI.save(auth);
          }else{
            model.addAttribute("message","This email has already been registered!");
-           return "studentregister";
+           return "student_register";
             }
         return "index";
     }
@@ -94,7 +94,10 @@ public class StudentController {
     @GetMapping("/course/{courseId}/announcement")
     public String getAnnouncements(@PathVariable("courseId") Integer id,Model model){
         Course course =courseService.getCourseByID(id);
-        List<Announcement> announcements = course.getAnouncementList();
+        List<Announcement> announcementsRaw = course.getAnouncementList();
+        List<Announcement> announcements = announcementsRaw.stream()
+                .sorted(Comparator.comparing(Announcement::getId).reversed())
+                .collect(Collectors.toList());
         model.addAttribute("announcements",announcements);
         return "student_announcement";
     }
@@ -102,7 +105,10 @@ public class StudentController {
     //    lesson data manipulation
     @GetMapping("/course/{courseId}/lesson")
     public String getLessons(@PathVariable("courseId") Integer id, Model model) {
-        List<Lesson> lessons = lessonService.getAllLessonByCourse(id);
+        List<Lesson> lessonsRaw = lessonService.getAllLessonByCourse(id);
+        List<Lesson> lessons = lessonsRaw.stream()
+                .sorted(Comparator.comparing(Lesson::getId).reversed())
+                .collect(Collectors.toList());
         for(Lesson lesson: lessons) {
             log.warn("getting lesson list" + lesson.getTitle());
         }

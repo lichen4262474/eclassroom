@@ -28,4 +28,6 @@ public interface SubmissionRepoI extends JpaRepository<Submission,Integer> {
 
     List<Submission> findByStudentAndCourse(Student student, Course course);
 
+    @Transactional
+    void deleteByAssignment(Assignment assignment);
 }

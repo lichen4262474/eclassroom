@@ -29,18 +29,22 @@ public class Submission {
     String submissionLink;
     Integer grade;
     @ManyToOne
-    @NonNull
     Assignment assignment;
     @ManyToOne
-    @NonNull
     Student student;
     @ManyToOne
-    @NonNull
     Course course;
 
     public Submission(@NonNull String submissionLink, Integer grade, @NonNull Assignment assignment, @NonNull Student student, @NonNull Course course) {
         this.submissionLink = submissionLink;
         this.grade = grade;
+        this.assignment = assignment;
+        this.student = student;
+        this.course = course;
+    }
+
+    public Submission(@NonNull String submissionLink, Assignment assignment, @NonNull Student student, @NonNull Course course) {
+        this.submissionLink = submissionLink;
         this.assignment = assignment;
         this.student = student;
         this.course = course;

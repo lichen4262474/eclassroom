@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -47,8 +46,12 @@ public class LessonService {
         lessonRepoI.save(lesson);
     }
 
-    public void deleteLesson(Integer id){
-        lessonRepoI.deleteById(id);
+    public void deleteLesson(Course course, Lesson lesson){
+        course.deleteLesson(lesson);
+        lesson.setCourse(null);
+        courseRepoI.save(course);
+        lessonRepoI.save(lesson);
+        lessonRepoI.deleteById(lesson.getId());
     }
 
     public void updateLesson(String title, String content, String resourceLink,Integer id){

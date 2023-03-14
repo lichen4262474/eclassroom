@@ -70,7 +70,7 @@ public class SubmissionService {
     public void updateAllGradeForAsgmt(Assignment asgmt, List<Integer> grades) throws InvalidInputException {
         List<Submission> submissionList = this.getAllSubmissionForAsgmt(asgmt);
         for (int i = 0; i < submissionList.size(); i++) {
-            if(grades.get(i) < 100 && grades.get(i) > 0) {
+            if(grades.get(i) < 101 && grades.get(i) > -1) {
                 submissionList.get(i).setGrade(grades.get(i));
             } else
             {
